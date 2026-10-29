@@ -1,0 +1,29 @@
+/* Rodapé: marca + três colunas (navegar, visite, contato) e uma linha de base. */
+.foot { border-top: 1px solid var(--line); background: var(--ink-2); color: var(--dim); font-size: .92rem; }
+.foot__grid { display: grid; gap: 40px; padding: 64px 0 48px; }
+.foot__brand p { margin-top: 16px; max-width: 34ch; }
+.foot__col h2 { margin-bottom: 16px; font: 500 .7rem/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--bone); }
+.foot__col ul { display: grid; gap: 4px; }
+.foot__col address, .foot__col p { line-height: 1.7; }
+.foot__col p { margin-top: 14px; }
+.foot a { color: var(--dim); text-decoration: none; transition: color .25s var(--ease); }
+.foot a:hover { color: var(--bone); }
+.foot__col a { display: inline-block; padding-block: 10px; margin-block: -6px; } /* alvo de ~44px sem abrir a lista */
+.foot .brand { color: var(--bone); }
+
+.foot__base {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 28px;
+  padding: 22px 0 96px; /* 96px: o botão flutuante do WhatsApp não cobre o "Voltar ao topo" */ border-top: 1px solid var(--line); font-size: .84rem;
+}
+.foot__top { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+.foot__top svg { transform: rotate(-90deg); }
+
+@media (min-width: 760px) {
+  .foot__grid { grid-template-columns: repeat(3, 1fr); }
+  .foot__brand { grid-column: 1 / -1; }
+  .foot__top { margin-left: auto; }
+}
+@media (min-width: 1000px) {
+  .foot__grid { grid-template-columns: 1.6fr 1fr 1fr 1.2fr; gap: 48px; padding-block: 80px 56px; }
+  .foot__brand { grid-column: auto; }
+}

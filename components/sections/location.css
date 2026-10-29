@@ -1,0 +1,98 @@
+.visitar__grid { display: grid; gap: 44px; align-items: center; }
+.visitar address { margin-top: 32px; font-size: 1.15rem; line-height: 1.75; }
+.meta { display: grid; gap: 18px; margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--line); }
+.meta dt { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); }
+.meta dd { margin: 5px 0 0; }
+.meta a { display: inline-block; padding-block: 12px; margin-block: -12px; text-underline-offset: 4px; }
+.visitar .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+/* Aberto/fechado agora: preenchido pelo site.js (sem JS fica vazio e some) */
+.status { display: inline-flex; align-items: center; gap: 7px; margin-left: 8px; padding: 5px 11px; border-radius: 99px; background: #e4dfda; font: 600 .72rem/1 var(--sans); vertical-align: 1px; white-space: nowrap; }
+.status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #6f676c; }
+.status.is-open { background: #d6f1de; }
+.status.is-open::before { background: #0f7a40; }
+.status:empty { display: none; }
+.visitar__map { position: relative; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; aspect-ratio: 4 / 3; max-height: 440px; background: var(--ink-2); }
+/* Coordenadas reais da loja: um detalhe técnico, não decoração */
+.visitar__coords {
+  position: absolute; z-index: 1; left: 14px; bottom: 14px; padding: 7px 11px; border-radius: 3px;
+  background: rgba(241, 238, 234, .92); color: var(--bone);
+  font: 600 .7rem/1 var(--disp); letter-spacing: .12em; font-variant-numeric: tabular-nums; pointer-events: none;
+}
+.visitar__map iframe { width: 100%; height: 100%; border: 0; filter: grayscale(.85) contrast(1.02); transition: filter .5s var(--ease); }
+.visitar__map:hover iframe { filter: grayscale(0) contrast(1); }
+
+@media (min-width: 900px) {
+  .visitar__grid { grid-template-columns: 1fr 1.05fr; gap: 70px; }
+}
+
+/* =========================================================
+   A CAMINHO — route.js: --g (o quadro cresce) e --k (a rota anda, quadro a quadro).
+   Padrão (sem JS ou com reduced-motion): o quadro final, as etapas e o botão, sem fixar nada.
+   ========================================================= */
+.grow { --route-bg: #060607; background: var(--route-bg); padding: var(--pad) 0; }
+.grow__pin { display: grid; gap: 36px; width: min(1180px, 100% - 44px); margin-inline: auto; }
+.grow__word { display: none; }
+.grow__card { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border-radius: 18px; background: var(--route-bg); }
+.grow__still { width: 100%; height: 100%; object-fit: cover; }
+.grow__credit { position: absolute; right: 12px; bottom: 10px; margin: 0; font-size: .66rem; color: rgba(244, 241, 238, .62); }
+.route { display: grid; gap: 22px; justify-items: start; }
+.route__title { font-size: clamp(1.6rem, 3.4vw, 2.6rem); }
+.route__steps { display: flex; flex-wrap: wrap; gap: 12px 28px; }
+.route__steps li { display: flex; align-items: center; gap: 11px; font: 500 .72rem/1 var(--sans); letter-spacing: .18em; text-transform: uppercase; color: var(--bone); }
+.route__steps li::before { content: ""; flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 3px rgba(224, 20, 36, .22); }
+
+/* --- Ao vivo --- */
+.grow.is-live { --g: 0; --k: 0; height: 690vh; padding: 0; }
+.grow.is-live .grow__pin { position: sticky; top: 0; display: block; width: auto; height: 100vh; height: 100svh; overflow: hidden; }
+.grow.is-live .grow__card {
+  --cw: min(30vw, 380px); --ch: min(24svh, 240px);
+  position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0;
+  clip-path: inset(calc((1 - var(--g)) * (50% - var(--ch) / 2)) calc((1 - var(--g)) * (50% - var(--cw) / 2)) round calc((1 - var(--g)) * 20px));
+}
+.grow.is-live .grow__still { display: none; }
+.grow__canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.grow.is-live .grow__credit { z-index: 3; top: 76px; right: 18px; bottom: auto; opacity: var(--g); } /* embaixo à direita já está o crédito gravado no mapa */
+/* "Vem [quadro] pra loja.": as palavras abrem caminho enquanto o quadro cresce */
+.grow.is-live .grow__word {
+  display: block; position: absolute; z-index: 2; top: 50%; margin: 0;
+  font: 800 clamp(2.6rem, 8vw, 8rem)/1 var(--disp); letter-spacing: -.045em; white-space: nowrap;
+  opacity: clamp(0, calc(1 - var(--g) * 1.8), 1);
+}
+.grow.is-live .grow__word--l { right: calc(50% + min(30vw, 380px) / 2 + 2.4vw); transform: translate(calc(var(--g) * -30vw), -50%); }
+.grow.is-live .grow__word--r { left: calc(50% + min(30vw, 380px) / 2 + 2.4vw); color: var(--red-text); transform: translate(calc(var(--g) * 30vw), -50%); }
+/* Escurece a lateral para a trilha ler sobre o mapa */
+.grow.is-live .grow__pin::after {
+  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(90deg, rgba(6, 6, 7, .82), rgba(6, 6, 7, 0) 48%); opacity: var(--g);
+}
+.grow.is-live .route {
+  position: absolute; z-index: 3; left: max(22px, (100% - 1180px) / 2); bottom: clamp(28px, 8vh, 72px);
+  width: min(27rem, calc(100% - 44px)); opacity: clamp(0, calc((var(--g) - .8) * 5), 1);
+}
+.grow.is-live .route__steps { position: relative; flex-direction: column; gap: 18px; }
+.grow.is-live .route__steps::before,
+.grow.is-live .route__steps::after { content: ""; position: absolute; left: 4px; top: 4px; bottom: 4px; width: 1px; background: rgba(244, 241, 238, .2); }
+.grow.is-live .route__steps::after { background: var(--red); transform: scaleY(var(--k)); transform-origin: top; }
+.grow.is-live .route__steps li { position: relative; z-index: 1; color: rgba(244, 241, 238, .45); transition: color .4s var(--ease); }
+.grow.is-live .route__steps li::before { background: var(--route-bg); box-shadow: inset 0 0 0 1.5px rgba(244, 241, 238, .45); transition: background .4s var(--ease), box-shadow .4s var(--ease); }
+.grow.is-live .route__steps li.is-on { color: var(--bone); }
+.grow.is-live .route__steps li.is-on::before { background: var(--red); box-shadow: 0 0 0 3px rgba(224, 20, 36, .25); }
+/* O título e o botão chegam junto com o pino da loja */
+.grow.is-live .route__title,
+.grow.is-live .route .btn { opacity: 0; translate: 0 14px; transition: opacity .6s var(--ease), translate .6s var(--ease); }
+.grow.is-live.is-end .route__title,
+.grow.is-live.is-end .route .btn { opacity: 1; translate: 0 0; }
+.grow.is-live:not(.is-end) .route .btn { pointer-events: none; }
+
+/* Celular: palavras acima e abaixo do quadro; a trilha vira uma linha no rodapé da tela */
+@media (max-width: 759px) {
+  .grow.is-live .grow__card { --cw: 62vw; --ch: 22svh; }
+  .grow.is-live .grow__word { left: 50%; right: auto; font-size: clamp(2.4rem, 13vw, 4rem); }
+  .grow.is-live .grow__word--l { top: calc(50% - 11svh - .62em); transform: translate(-50%, calc(-50% - var(--g) * 30svh)); }
+  .grow.is-live .grow__word--r { top: calc(50% + 11svh + .62em); transform: translate(-50%, calc(-50% + var(--g) * 30svh)); }
+  .grow.is-live .grow__pin::after { background: linear-gradient(0deg, rgba(6, 6, 7, .92), rgba(6, 6, 7, 0) 42%); }
+  .grow.is-live .route { left: 22px; right: 22px; width: auto; bottom: 22px; gap: 16px; }
+  .grow.is-live .route__title { font-size: 1.45rem; }
+  .grow.is-live .route__steps { flex-direction: row; flex-wrap: wrap; gap: 12px 18px; }
+  .grow.is-live .route__steps::before, .grow.is-live .route__steps::after { display: none; }
+}

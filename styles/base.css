@@ -1,0 +1,81 @@
+/* Base: tokens, reset, tipografia e utilitários compartilhados por todas as seções. */
+
+:root {
+  --ink: #08070a;
+  --ink-2: #0e0b0f;
+  --bone: #f4f1ee;
+  --dim: #9a9299;
+  --red: #e01424;
+  --red-text: #ff3d4b; /* vermelho para texto pequeno sobre o escuro: 5,8:1 (o --red dá 4,1:1) */
+  --red-deep: #7a0a14;
+  --wa: #0f7a40;       /* branco sobre ele: 5,4:1 (o #128c4a antigo dava 4,3:1) */
+  --wa-hover: #0b6a38;
+  --line: rgba(244, 241, 238, .12);
+  --ease: cubic-bezier(.22, .9, .26, 1);
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --disp: "Sora", var(--sans);
+  --pad: clamp(84px, 11vw, 140px);
+}
+
+:root { color-scheme: dark; scrollbar-color: #3a333c var(--ink); }
+::selection { background: var(--red); color: #fff; }
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font: 400 1rem/1.65 var(--sans);
+  overflow-x: clip; /* clip (não hidden): não quebra position:sticky */
+  -webkit-font-smoothing: antialiased;
+}
+img, svg, iframe { display: block; max-width: 100%; }
+h1, h2, h3, p, ul, ol, dl, dd, address, figure { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+address { font-style: normal; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--bone); outline-offset: 4px; border-radius: 4px; }
+
+.wrap { width: min(1180px, 100% - 44px); margin-inline: auto; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.dim { color: var(--dim); }
+.skip { position: fixed; z-index: 100; left: 14px; top: -70px; background: var(--bone); color: #000; padding: 11px 16px; border-radius: 8px; font-weight: 500; transition: top .2s; }
+.skip:focus { top: 14px; }
+
+.eyebrow {
+  font: 500 .72rem/1 var(--sans);
+  letter-spacing: .2em; text-transform: uppercase; color: var(--red);
+}
+h1, h2, h3 { font-family: var(--disp); font-weight: 800; letter-spacing: -.03em; line-height: 1.08; text-wrap: balance; }
+
+.section { padding: var(--pad) 0; }
+
+/* Seção clara: troca só os tokens; tudo que usa --bone/--dim/--line acompanha */
+.is-light { --bone: #16121a; --dim: #5b5459; --line: rgba(22, 18, 26, .14); --red-text: #b3101d; background: #f1eeea; color: var(--bone); }
+/* Rótulos de seção com índice — o mesmo 01–04 do menu */
+.section .eyebrow { color: var(--red-text); }
+.eyebrow .idx { margin-right: 12px; font-variant-numeric: tabular-nums; }
+.eyebrow .idx::after { content: ""; display: inline-block; width: 26px; height: 1px; margin-left: 12px; vertical-align: middle; background: currentColor; opacity: .55; }
+.head { max-width: 42rem; }
+.head h2 { margin-top: 16px; font-size: clamp(1.9rem, 4.4vw, 3rem); }
+
+/* Revelação discreta (apenas em cabeçalhos de seção) */
+.js .reveal { opacity: 0; transform: translateY(16px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+.js .reveal.is-in { opacity: 1; transform: none; }
+
+@media (min-width: 1400px) { .wrap { width: min(1280px, 100% - 90px); } }
+@media (max-width: 390px) {
+  .wrap { width: calc(100% - 32px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  /* Sem movimento, mas com feedback: transições curtas só de cor e opacidade */
+  *, *::before, *::after {
+    animation: none !important;
+    transition-property: color, background-color, border-color, background-size, opacity, outline-color !important;
+    transition-duration: .15s !important;
+    transition-delay: 0s !important;
+  }
+  .js .reveal { opacity: 1; transform: none; }
+}

@@ -15,8 +15,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Sora:wght@600;800&amp;display=swap">
-<link rel="stylesheet" href="styles.css">
-<script defer src="script.js"></script>
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="components/ui/button.css">
+<link rel="stylesheet" href="components/ui/phone-mock.css">
+<link rel="stylesheet" href="components/layout/navbar.css">
+<link rel="stylesheet" href="components/hero/hero-animation.css">
+<link rel="stylesheet" href="components/sections/about.css">
+<link rel="stylesheet" href="components/sections/four-things.css">
+<link rel="stylesheet" href="components/sections/location.css">
+<link rel="stylesheet" href="styles/motion.css">
+<link rel="stylesheet" href="components/sections/instagram.css">
+<link rel="stylesheet" href="components/sections/final-cta.css">
+<link rel="stylesheet" href="components/layout/footer.css">
+<script defer src="scripts/site.js"></script>
+<script defer src="components/layout/navbar.js"></script>
+<script defer src="components/hero/hero-animation.js"></script>
+<script defer src="components/hero/hero-3d.js"></script>
+<script defer src="components/sections/four-things.js"></script>
+<script defer src="components/sections/final-cta.js"></script>
+<script defer src="scripts/motion.js"></script>
+<script defer src="components/sections/route.js"></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -62,16 +80,34 @@
       <svg class="brand__mark" width="30" height="30" aria-hidden="true"><use href="#i-mark"/></svg>
       <span class="brand__name">Play<b>Cell</b></span>
     </a>
-    <nav class="nav__links" id="menu" aria-label="Navegação principal">
-      <a href="#sobre">A loja</a>
-      <a href="#servicos">O que fazemos</a>
-      <a href="#visitar">Onde estamos</a>
-      <a href="#instagram">Instagram</a>
-      <a class="btn btn--wa btn--sm" href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de falar com vocês.">
-        <svg width="17" height="17" aria-hidden="true"><use href="#i-wa"/></svg> WhatsApp
-      </a>
-    </nav>
-    <button class="nav__toggle" id="toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu"><span></span><span></span></button>
+    <button class="nav__toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="menu" aria-label="Abrir menu">
+      <span class="nav__label" aria-hidden="true">Menu</span>
+      <span class="nav__burger" aria-hidden="true"><i></i><i></i></span>
+    </button>
+  </div>
+
+  <div class="menu__scrim" aria-hidden="true"></div>
+  <div class="menu" id="menu" inert>
+    <div class="menu__grid">
+      <nav aria-label="Navegação principal">
+        <ol class="menu__links">
+          <li style="--i:0"><a href="#sobre"><span aria-hidden="true">01</span>A loja</a></li>
+          <li style="--i:1"><a href="#servicos"><span aria-hidden="true">02</span>O que fazemos</a></li>
+          <li style="--i:2"><a href="#visitar"><span aria-hidden="true">03</span>Onde estamos</a></li>
+          <li style="--i:3"><a href="#instagram"><span aria-hidden="true">04</span>Instagram</a></li>
+        </ol>
+      </nav>
+      <div class="menu__aside">
+        <a class="btn btn--wa" href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de falar com vocês.">
+          <svg width="19" height="19" aria-hidden="true"><use href="#i-wa"/></svg> Falar no WhatsApp
+        </a>
+        <dl class="menu__meta">
+          <div><dt>Loja</dt><dd><a href="https://maps.app.goo.gl/TBpPqgsaHeXkrfpd6" target="_blank" rel="noopener noreferrer">Av. Tancredo Neves, Centro<br>Goianésia do Pará, PA<span class="sr"> (abre o Google Maps em nova aba)</span></a></dd></div>
+          <div><dt>Horário</dt><dd>Segunda a sábado, 8h às 19h</dd></div>
+          <div><dt>Instagram</dt><dd><a href="https://www.instagram.com/play_cell_goianesia/" target="_blank" rel="noopener noreferrer">@play_cell_goianesia<span class="sr"> (abre em nova aba)</span></a></dd></div>
+        </dl>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -126,77 +162,146 @@
       </p>
 
       <p class="scroll-hint" aria-hidden="true"><span>Role para explorar</span><i></i></p>
-      <p class="sr">Animação decorativa: ao rolar a página, um celular se separa em película, tela, placa, bateria, estrutura e capinha.</p>
+      <p class="sr">Animação decorativa: ao rolar a página, um celular em 3D se separa em película, tela, placa, bateria, estrutura e capinha. Arrastar gira o aparelho.</p>
     </div>
   </section>
 
   <!-- 2. SOBRE -->
-  <section class="section sobre" id="sobre" aria-labelledby="sobre-title">
+  <section class="section sobre is-light" id="sobre" aria-labelledby="sobre-title">
+    <div class="ribbons" aria-hidden="true">
+      <p class="ribbon ribbon--red"><span>Películas ● Capinhas ● Carregadores ● Manutenção ● Entrega ● Películas ● Capinhas ● Carregadores ● Manutenção ● Entrega ● </span><span>Películas ● Capinhas ● Carregadores ● Manutenção ● Entrega ● Películas ● Capinhas ● Carregadores ● Manutenção ● Entrega ● </span></p>
+      <p class="ribbon ribbon--ink"><span>Av. Tancredo Neves ● Centro ● Goianésia do Pará ● Seg a sáb ● Av. Tancredo Neves ● Centro ● Goianésia do Pará ● Seg a sáb ● </span><span>Av. Tancredo Neves ● Centro ● Goianésia do Pará ● Seg a sáb ● Av. Tancredo Neves ● Centro ● Goianésia do Pará ● Seg a sáb ● </span></p>
+    </div>
     <div class="wrap sobre__grid">
-      <p class="eyebrow reveal">A loja</p>
       <div class="sobre__body">
+        <p class="eyebrow reveal"><span class="idx" aria-hidden="true">01</span>A loja</p>
         <h2 id="sobre-title" class="statement reveal">A Play Cell é a loja do Centro de Goianésia do Pará onde o celular entra com problema e sai resolvido.</h2>
-        <p class="reveal">Acessório, proteção e manutenção no mesmo balcão, para todas as marcas. Atendimento de segunda a sábado, e entrega combinada pelo WhatsApp quando você não puder passar aqui.</p>
+        <p class="reveal">Acessório, proteção e manutenção no mesmo balcão, para todas as marcas. E quando você não puder passar aqui, a gente combina a entrega pelo WhatsApp.</p>
         <dl class="stats reveal">
-          <div><dt>Instagram</dt><dd>2.324 <span>seguidores</span></dd></div>
-          <div><dt>Google</dt><dd>5,0 <span>de avaliação</span></dd></div>
+          <div><dt>Instagram</dt><dd><b data-count="2.3" data-dec="1">2,3</b> mil <span>seguidores</span></dd></div>
           <div><dt>Horário</dt><dd>8h–19h <span>seg a sáb</span></dd></div>
+          <div><dt>Entrega</dt><dd>Fazemos <span>é só combinar pelo WhatsApp</span></dd></div>
         </dl>
       </div>
     </div>
   </section>
 
-  <!-- 3. O QUE FAZEMOS -->
-  <section class="section servicos" id="servicos" aria-labelledby="serv-title">
-    <div class="wrap">
-      <header class="head reveal">
-        <p class="eyebrow">O que fazemos</p>
-        <h2 id="serv-title">Quatro coisas, bem feitas.</h2>
-      </header>
-      <ol class="rows">
-        <li class="row">
-          <span class="row__n" aria-hidden="true">01</span>
-          <h3>Películas</h3>
-          <p>Vidro e privativa, aplicadas na hora, sem bolha e sem susto.</p>
-          <a class="row__cta" href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de saber sobre películas para o meu celular.">Consultar meu modelo <svg width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+  <!-- 3. QUATRO AMBIENTES — o scroll vertical conduz uma "câmera" por quatro cenários -->
+  <section class="section things" id="servicos" aria-labelledby="serv-title">
+    <div class="things__pin">
+      <div class="things__bgs" aria-hidden="true">
+        <div class="things__bg things__bg--pelicula" style="--i:0"></div>
+        <div class="things__bg things__bg--capinha" style="--i:1"></div>
+        <div class="things__bg things__bg--carregador" style="--i:2"></div>
+        <div class="things__bg things__bg--manutencao" style="--i:3"></div>
+      </div>
+      <div class="wrap things__head">
+        <header class="head">
+          <p class="eyebrow"><span class="idx" aria-hidden="true">02</span>O que fazemos</p>
+          <h2 id="serv-title">Quatro coisas, bem feitas.</h2>
+        </header>
+      </div>
+      <ol class="things__rooms">
+        <li class="room room--pelicula" style="--i:0">
+          <div class="room__light" aria-hidden="true"></div>
+          <figure class="room__object">
+            <video class="room__media" src="assets/services/pelicula.mp4" poster="assets/services/pelicula.webp" width="720" height="1280" muted playsinline preload="none" data-once aria-hidden="true"></video>
+            <span class="room__glare" aria-hidden="true"></span>
+          </figure>
+          <div class="room__copy">
+            <p class="room__cat"><span class="room__n" aria-hidden="true">01</span>Proteção de tela</p>
+            <h3>Películas</h3>
+            <p class="room__text">Proteção para a tela do seu celular. Mande o modelo no WhatsApp e confira o que tem.</p>
+            <a class="room__cta" href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de saber sobre películas para o meu celular.">Consultar meu modelo <svg width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
         </li>
-        <li class="row">
-          <span class="row__n" aria-hidden="true">02</span>
-          <h3>Capinhas</h3>
-          <p>Proteção de verdade nas quinas e na traseira, do básico ao que tem a sua cara.</p>
-          <a class="row__cta" href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de ver as capinhas disponíveis para o meu celular.">Ver o que tem <svg width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <li class="room room--capinha" style="--i:1">
+          <div class="room__light" aria-hidden="true"></div>
+          <figure class="room__object">
+            <video class="room__media" src="assets/services/capinha.mp4" poster="assets/services/capinha.webp" width="720" height="1280" muted playsinline preload="none" loop aria-hidden="true"></video>
+            <span class="room__glare" aria-hidden="true"></span>
+          </figure>
+          <div class="room__copy">
+            <p class="room__cat"><span class="room__n" aria-hidden="true">02</span>Proteção do aparelho</p>
+            <h3>Capinhas</h3>
+            <p class="room__text">Capinhas para proteger o aparelho e combinar com você. Pergunte pelo seu modelo.</p>
+            <a class="room__cta" href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de ver as capinhas disponíveis para o meu celular.">Ver o que tem <svg width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
         </li>
-        <li class="row">
-          <span class="row__n" aria-hidden="true">03</span>
-          <h3>Carregadores e cabos</h3>
-          <p>Opções para iPhone e para Android, do tipo que não castiga a sua bateria.</p>
-          <a class="row__cta" href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de saber sobre carregadores e cabos.">Perguntar disponibilidade <svg width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <li class="room room--carregador" style="--i:2">
+          <div class="room__light" aria-hidden="true"></div>
+          <figure class="room__object">
+            <video class="room__media" src="assets/services/carregador.mp4" poster="assets/services/carregador.webp" width="720" height="1280" muted playsinline preload="none" loop aria-hidden="true"></video>
+            <span class="room__glare" aria-hidden="true"></span>
+            <span class="charge is-full" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>
+              <span class="charge__cell"><i></i></span>
+              <b class="charge__n">100%</b>
+            </span>
+          </figure>
+          <div class="room__copy">
+            <p class="room__cat"><span class="room__n" aria-hidden="true">03</span>Energia</p>
+            <h3>Carregadores e cabos</h3>
+            <p class="room__text">Carregadores e cabos para o seu aparelho. Pergunte pelo seu modelo no WhatsApp.</p>
+            <a class="room__cta" href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de saber sobre carregadores e cabos.">Perguntar disponibilidade <svg width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
         </li>
-        <li class="row">
-          <span class="row__n" aria-hidden="true">04</span>
-          <h3>Manutenção</h3>
-          <p>Tela, bateria, conector. Conte o que aconteceu e a gente diz o que dá para fazer.</p>
-          <a class="row__cta" href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de uma orientação sobre manutenção no meu celular.">Descrever o problema <svg width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <li class="room room--manutencao" style="--i:3">
+          <div class="room__light" aria-hidden="true"></div>
+          <figure class="room__object">
+            <img class="room__media" src="assets/services/manutencao.webp" width="736" height="1104" loading="lazy" decoding="async" alt="Celular aberto sobre a bancada, com a bateria e a placa expostas, durante uma manutenção.">
+            <img class="xray" src="assets/services/manutencao-xray.webp" width="736" height="1104" loading="lazy" decoding="async" alt="" aria-hidden="true">
+            <i class="xray__scan" aria-hidden="true"></i>
+            <ul class="xray__tags" aria-hidden="true">
+              <li style="--x:.15;--y:.25">Câmera</li>
+              <li style="--x:.31;--y:.44">Bateria</li>
+              <li style="--x:.62;--y:.5">Placa</li>
+              <li style="--x:.56;--y:.7">Conector</li>
+            </ul>
+            <span class="room__glare" aria-hidden="true"></span>
+          </figure>
+          <div class="room__copy">
+            <p class="room__cat"><span class="room__n" aria-hidden="true">04</span>Assistência técnica</p>
+            <h3>Manutenção</h3>
+            <p class="room__text">Conte o que aconteceu com o seu celular e a gente orienta o que dá para fazer.</p>
+            <a class="room__cta" href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de uma orientação sobre manutenção no meu celular.">Descrever o problema <svg width="16" height="16" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          </div>
         </li>
       </ol>
+      <p class="things__index" aria-hidden="true"><b>01</b><i></i><span>04</span></p>
     </div>
   </section>
 
-  <!-- 4. DIFERENCIAIS -->
-  <section class="band" aria-label="Diferenciais da Play Cell">
-    <div class="wrap band__grid">
-      <p><b>Segunda a sábado</b><span>Das 8h às 19h, sem mistério.</span></p>
-      <p><b>Fazemos entrega</b><span>É só combinar pelo WhatsApp.</span></p>
-      <p><b>Todas as marcas</b><span>Apple, Samsung, Motorola, Xiaomi e companhia.</span></p>
+  <!-- 4. A CAMINHO — o quadro cresce e a rolagem percorre a rota, quadro a quadro -->
+  <section class="grow" id="caminho" aria-labelledby="caminho-title">
+    <div class="grow__pin">
+      <p class="grow__word grow__word--l" aria-hidden="true">Vem</p>
+      <div class="grow__card">
+        <img class="grow__still" src="assets/location/route/120.webp" width="1280" height="720" loading="lazy" decoding="async" alt="Mapa com a rota da Rodoviária até a Play Cell, pela Av. Tancredo Neves, no Centro de Goianésia do Pará.">
+        <p class="grow__credit">Mapa: © colaboradores do OpenStreetMap</p>
+      </div>
+      <p class="grow__word grow__word--r" aria-hidden="true">pra loja.</p>
+      <div class="route">
+        <h2 id="caminho-title" class="route__title">Da Rodoviária até a porta da Play Cell.</h2>
+        <ol class="route__steps">
+          <li data-at=".26">Goianésia do Pará</li>
+          <li data-at=".53">Rodoviária</li>
+          <li data-at=".66">Av. Tancredo Neves</li>
+          <li data-at=".84">Play Cell</li>
+        </ol>
+        <a class="btn" href="https://maps.app.goo.gl/TBpPqgsaHeXkrfpd6" target="_blank" rel="noopener noreferrer">
+          <svg width="19" height="19" aria-hidden="true"><use href="#i-pin"/></svg> Traçar rota <span class="sr">(abre em nova aba)</span>
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- 5. LOJA FÍSICA + LOCALIZAÇÃO -->
-  <section class="section visitar" id="visitar" aria-labelledby="visitar-title">
+  <section class="section visitar is-light" id="visitar" aria-labelledby="visitar-title">
     <div class="wrap visitar__grid">
       <div class="visitar__info">
         <header class="head reveal">
-          <p class="eyebrow">Onde estamos</p>
+          <p class="eyebrow"><span class="idx" aria-hidden="true">03</span>Onde estamos</p>
           <h2 id="visitar-title">Tem uma loja de verdade atrás disso tudo.</h2>
         </header>
         <address>
@@ -204,7 +309,7 @@
           Goianésia do Pará, PA · 68639-000
         </address>
         <dl class="meta">
-          <div><dt>Horário</dt><dd>Segunda a sábado, 8h às 19h</dd></div>
+          <div><dt>Horário</dt><dd>Segunda a sábado, 8h às 19h <span class="status" data-status></span></dd></div>
           <div><dt>WhatsApp</dt><dd><a href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de falar com vocês.">(94) 99220-4960</a></dd></div>
           <div><dt>Plus Code</dt><dd>5V7X+28 Goianésia do Pará</dd></div>
         </dl>
@@ -216,6 +321,7 @@
         </div>
       </div>
       <div class="visitar__map">
+        <p class="visitar__coords" aria-hidden="true">3°50′15″S · 49°06′06″O</p>
         <iframe title="Mapa com a localização da Play Cell na Av. Tancredo Neves, Goianésia do Pará" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
           src="https://www.google.com/maps?q=-3.8374923,-49.1017017&amp;z=17&amp;output=embed"></iframe>
       </div>
@@ -226,42 +332,115 @@
   <section class="section insta" id="instagram" aria-labelledby="ig-title">
     <div class="wrap insta__grid">
       <div class="reveal">
-        <p class="eyebrow">O dia a dia</p>
+        <p class="eyebrow"><span class="idx" aria-hidden="true">04</span>O dia a dia</p>
         <h2 id="ig-title">O movimento da loja fica no Instagram.</h2>
         <p class="insta__sub">Produto que chegou, manutenção pronta, cliente saindo satisfeito. Os destaques <b>Clientes</b> e <b>Manutenção</b> são o melhor resumo de como a gente trabalha.</p>
+        <a class="insta__cta" href="https://www.instagram.com/play_cell_goianesia/" target="_blank" rel="noopener noreferrer">
+          <svg width="22" height="22" aria-hidden="true"><use href="#i-ig"/></svg>
+          <span><b>@play_cell_goianesia</b>2,3 mil seguidores</span>
+          <span class="sr">(abre em nova aba)</span>
+        </a>
       </div>
-      <a class="insta__cta reveal" href="https://www.instagram.com/play_cell_goianesia/" target="_blank" rel="noopener noreferrer">
-        <svg width="22" height="22" aria-hidden="true"><use href="#i-ig"/></svg>
-        <span><b>@play_cell_goianesia</b>2.324 seguidores</span>
-        <span class="sr">(abre em nova aba)</span>
-      </a>
+      <div class="mock mock--ig mock--dark mock--flip reveal" aria-hidden="true">
+        <div class="mock__card">
+        <div class="mock__back"><svg width="58" height="58"><use href="#i-mark"/></svg></div>
+        <div class="mock__phone">
+          <div class="mprof rise" style="--i:0">
+            <img class="mprof__av" src="assets/instagram/avatar.webp" width="64" height="64" alt="" loading="lazy" decoding="async">
+            <span class="mprof__stats"><span><b data-count="46">46</b>posts</span><span><b data-count="2321">2.321</b>seguidores</span><span><b data-count="1530">1.530</b>seguindo</span></span>
+          </div>
+          <p class="mhandle rise" style="--i:1"><b>play_cell_goianesia</b><small>Play Cell · Produto/serviço</small></p>
+          <p class="mbio rise" style="--i:2"><span>Av.Tancredo Neves, Centro</span><span>Seg á Sábado 08:00 ás 19:00h</span><span>Fazemos entrega</span><span>94992204960</span></p>
+          <div class="mact rise" style="--i:3"><span>Seguir</span><span>Mensagem</span></div>
+          <div class="mhl rise" style="--i:3">
+            <span><img src="assets/instagram/destaque-clientes.webp" width="44" height="44" alt="" loading="lazy" decoding="async">Clientes</span>
+            <span><img src="assets/instagram/destaque-manutencao.webp" width="44" height="44" alt="" loading="lazy" decoding="async">Manutenção</span>
+          </div>
+          <div class="mgrid rise" style="--i:4"><video src="assets/instagram/perfil.mp4" poster="assets/instagram/perfil.webp" width="564" height="412" muted loop playsinline preload="none"></video></div>
+        </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- 7. CTA FINAL -->
+  <!-- 7. CTA FINAL — a mensagem do WhatsApp é montada ao vivo -->
   <section class="final" aria-labelledby="final-title">
-    <div class="wrap">
-      <h2 id="final-title" class="reveal">Manda o modelo do seu celular.<br>A gente resolve o resto.</h2>
-      <a class="btn btn--wa btn--lg reveal" href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell. O modelo do meu celular é:">
-        <svg width="22" height="22" aria-hidden="true"><use href="#i-wa"/></svg> Chamar no WhatsApp
+    <div class="wrap final__grid" data-light>
+      <a class="seal" href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de falar com vocês." aria-label="Chamar a Play Cell no WhatsApp">
+        <svg class="seal__ring" viewBox="0 0 120 120" aria-hidden="true"><defs><path id="seal-path" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#seal-path" textLength="282" lengthAdjust="spacing">CHAMA NO WHATSAPP ● PLAY CELL ● GOIANÉSIA ●</textPath></text></svg>
+        <svg class="seal__icon" width="28" height="28" aria-hidden="true"><use href="#i-wa"/></svg>
       </a>
+      <div class="reveal">
+        <h2 id="final-title">Manda o modelo do seu celular.<br>A gente resolve o resto.</h2>
+        <form class="ask" id="ask" action="https://wa.me/5594992204960" method="get" target="_blank" rel="noopener noreferrer">
+          <input type="hidden" name="text" value="Olá! Vi o site da Play Cell e gostaria de falar com vocês.">
+          <fieldset class="ask__opts">
+            <legend>Do que você precisa?</legend>
+            <div>
+              <label><input type="radio" name="servico" value="pelicula" checked><span>Película</span></label>
+              <label><input type="radio" name="servico" value="capinha"><span>Capinha</span></label>
+              <label><input type="radio" name="servico" value="carregador"><span>Carregador</span></label>
+              <label><input type="radio" name="servico" value="manutencao"><span>Manutenção</span></label>
+            </div>
+          </fieldset>
+          <label class="ask__field"><span>Modelo do celular</span>
+            <input name="modelo" type="text" maxlength="40" autocomplete="off" enterkeyhint="send" placeholder="Ex.: Galaxy A15, iPhone 13, Redmi Note 13">
+          </label>
+          <button class="btn btn--wa btn--lg" type="submit">
+            <svg width="22" height="22" aria-hidden="true"><use href="#i-wa"/></svg> Enviar no WhatsApp <span class="sr">(abre em nova aba)</span>
+          </button>
+          <p class="ask__note">Tela trincada? A gente não julga. 😌</p>
+        </form>
+      </div>
+      <div class="mock mock--chat mock--dark reveal" aria-hidden="true">
+        <div class="mock__phone">
+          <div class="mbar"><svg class="mbar__logo" width="30" height="30"><use href="#i-mark"/></svg><span><b>Play Cell</b><small>Prévia da sua mensagem</small></span></div>
+          <div class="mchat">
+            <p class="bubble bubble--out"><span id="ask-preview">Oi, Play Cell! Preciso de uma película para o meu celular.</span><small>agora ✓✓</small></p>
+          </div>
+          <div class="mcomp"><span>Mensagem</span><i></i></div>
+        </div>
+      </div>
     </div>
   </section>
 </main>
 
 <footer class="foot">
-  <div class="wrap foot__row">
-    <a class="brand" href="#topo" aria-label="Play Cell, voltar ao topo">
-      <svg class="brand__mark" width="26" height="26" aria-hidden="true"><use href="#i-mark"/></svg>
-      <span class="brand__name">Play<b>Cell</b></span>
-    </a>
-    <p>Av. Tancredo Neves, Centro · Goianésia do Pará, PA</p>
-    <p>
-      <a href="https://www.instagram.com/play_cell_goianesia/" target="_blank" rel="noopener noreferrer">Instagram</a> ·
-      <a href="https://maps.app.goo.gl/TBpPqgsaHeXkrfpd6" target="_blank" rel="noopener noreferrer">Google Maps</a> ·
-      <a href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de falar com vocês.">(94) 99220-4960</a>
-    </p>
-    <p class="dim">© <span id="year">2026</span> Play Cell</p>
+  <div class="wrap foot__grid">
+    <div class="foot__brand">
+      <a class="brand" href="#topo" aria-label="Play Cell, voltar ao topo">
+        <svg class="brand__mark" width="30" height="30" aria-hidden="true"><use href="#i-mark"/></svg>
+        <span class="brand__name">Play<b>Cell</b></span>
+      </a>
+      <p>Películas, capinhas, carregadores e manutenção de celular no Centro de Goianésia do Pará.</p>
+    </div>
+    <nav class="foot__col" aria-label="Seções do site">
+      <h2>Navegar</h2>
+      <ul>
+        <li><a href="#sobre">A loja</a></li>
+        <li><a href="#servicos">O que fazemos</a></li>
+        <li><a href="#visitar">Onde estamos</a></li>
+        <li><a href="#instagram">Instagram</a></li>
+      </ul>
+    </nav>
+    <div class="foot__col">
+      <h2>Visite</h2>
+      <address>Av. Tancredo Neves, Centro<br>Goianésia do Pará, PA<br>68639-000</address>
+      <p>Segunda a sábado<br>8h às 19h</p>
+    </div>
+    <div class="foot__col">
+      <h2>Contato</h2>
+      <ul>
+        <li><a href="https://wa.me/5594992204960" data-wa="Olá! Vi o site da Play Cell e gostaria de falar com vocês.">WhatsApp (94) 99220-4960</a></li>
+        <li><a href="https://www.instagram.com/play_cell_goianesia/" target="_blank" rel="noopener noreferrer">@play_cell_goianesia<span class="sr"> (abre em nova aba)</span></a></li>
+        <li><a href="https://maps.app.goo.gl/TBpPqgsaHeXkrfpd6" target="_blank" rel="noopener noreferrer">Abrir no Google Maps<span class="sr"> (abre em nova aba)</span></a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap foot__base">
+    <p>© <span id="year">2026</span> Play Cell · Goianésia do Pará, PA</p>
+    <p>Cuidando do emocional e do aparelho celular.</p>
+    <a class="foot__top" href="#topo">Voltar ao topo <svg width="15" height="15" aria-hidden="true"><use href="#i-arrow"/></svg></a>
   </div>
 </footer>
 

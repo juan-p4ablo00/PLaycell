@@ -1,0 +1,213 @@
+/* =========================================================
+   HERO — a desmontagem é controlada pelo progresso do scroll.
+   O JS escreve apenas --p (0 → 1) em #stage; todo o resto é CSS.
+   Parte aprovada e congelada: não depende de nenhuma outra seção.
+   ========================================================= */
+.hero { position: relative; height: 520vh; }
+/* O hero mantém o verde aprovado do botão; o resto do site usa o token novo (mais contraste). */
+.hero { --wa: #128c4a; --wa-hover: #0e7340; }
+
+.stage {
+  --p: 0;
+  position: sticky; top: 0;
+  height: 100vh; height: 100svh;
+  display: grid; place-items: center;
+  overflow: hidden;
+  perspective: 1500px; perspective-origin: 50% 46%;
+  background: var(--ink);
+}
+.stage__glow {
+  position: absolute; width: min(760px, 120vw); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle, rgba(224, 20, 36, .34), rgba(224, 20, 36, .06) 45%, transparent 68%);
+  opacity: calc(.55 + var(--p) * .2);
+  transform: scale(calc(.72 + var(--p) * .3));
+}
+
+/* --- Texto de abertura --- */
+.intro {
+  position: absolute; inset: 0; z-index: 4;
+  display: grid; align-content: center;
+  opacity: clamp(0, calc(1 - var(--p) * 6), 1);
+  transform: translateY(calc(var(--p) * -48px));
+}
+/* Some do fluxo de foco só depois do primeiro ato (sem JS, continua visível) */
+.stage[data-act]:not([data-act="0"]) .intro { visibility: hidden; }
+.intro h1 { margin: 22px 0 0; font-size: clamp(1.95rem, 4.6vw, 4rem); }
+.intro h1 em { font-style: normal; color: var(--red); }
+.intro .lead { margin-top: 20px; max-width: 42ch; color: var(--dim); font-size: clamp(1rem, 1.5vw, 1.12rem); }
+.intro .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+
+/* --- Dispositivo --- */
+.device {
+  --ox: 0px; --oy: 15vh; --sc: .74; --shift: -6vw;
+  --e: clamp(0, calc(var(--p) * 3.2), 1);       /* entrada: só nos primeiros 31% */
+  position: relative; z-index: 2;
+  width: min(248px, 46vw); aspect-ratio: 9 / 19;
+  transform-style: preserve-3d;
+  transform:
+    translate3d(calc(var(--ox) * (1 - var(--e)) + var(--p) * var(--shift)), calc(var(--oy) * (1 - var(--e)) - var(--p) * 3vh), 0)
+    rotateX(calc(var(--p) * -14deg))
+    rotateY(calc(var(--p) * 30deg))
+    scale(calc((var(--sc) + (1 - var(--sc)) * var(--e)) * (1 - var(--p) * .34)));
+  will-change: transform;
+}
+
+.layer {
+  --s: 0;     /* onde a peça começa a se separar (0–1) */
+  --z: 0px;   /* deslocamento final em profundidade */
+  --dy: 0px;  /* deslocamento final na vertical */
+  --z0: 0px;  /* offset fixo: evita z-fighting com tudo montado */
+  --lp: clamp(0, calc((var(--p) - var(--s)) / .42), 1);
+  position: absolute; inset: 0; border-radius: 26px;
+  transform-style: preserve-3d; backface-visibility: hidden;
+  transform: translate3d(0, calc(var(--dy) * var(--lp)), calc(var(--z0) + var(--z) * var(--lp)));
+}
+
+.layer--film   { --s: .06; --z: 300px;  --dy: -190px; --z0: 2px; }
+.layer--screen { --s: .20; --z: 170px;  --dy: -108px; --z0: 1px; }
+.layer--board  { --s: .36; --z: 40px;   --dy: -22px;  --z0: 0px; }
+.layer--batt   { --s: .48; --z: -90px;  --dy: 70px;   --z0: -1px; }
+.layer--frame  { --s: .58; --z: -220px; --dy: 160px;  --z0: -2px; }
+.layer--case   { --s: .68; --z: -350px; --dy: 250px;  --z0: -3px; }
+
+/* Índice de peças: 2D, sem oclusão, dirigido pelo mesmo --p */
+.parts {
+  position: absolute; z-index: 5; left: clamp(20px, 4.5vw, 70px); top: 50%; translate: 0 -50%;
+  display: grid; gap: 15px;
+  opacity: clamp(0, calc((var(--p) - .1) * 8), 1);
+}
+.parts li {
+  position: relative; padding-left: 20px;
+  font: 500 .67rem/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--bone);
+  opacity: clamp(.26, calc((var(--p) - var(--s)) * 9), 1);
+}
+.parts li::before {
+  content: ""; position: absolute; left: 0; top: 50%; width: 11px; height: 1px; background: var(--red);
+  transform: scaleX(clamp(0, calc((var(--p) - var(--s)) * 9), 1)); transform-origin: left center;
+}
+
+/* Película: vidro com varredura de luz */
+.layer--film {
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: 27px;
+  background: linear-gradient(118deg, rgba(255, 255, 255, .02) 32%, rgba(255, 255, 255, .17) 46%, rgba(255, 255, 255, .02) 60%);
+  box-shadow: 0 30px 60px -36px #000;
+}
+/* Tela */
+.layer--screen {
+  display: grid; place-content: center; justify-items: center; gap: 12px;
+  background: radial-gradient(118% 88% at 50% 16%, #2c0b12, #0a0609 72%);
+  border: 1px solid rgba(255, 255, 255, .13);
+  box-shadow: inset 0 0 70px -24px rgba(224, 20, 36, .7);
+}
+.layer__logo { color: var(--red); filter: drop-shadow(0 8px 22px rgba(224, 20, 36, .55)); }
+.layer--screen span { font: 600 .72rem/1 var(--disp); letter-spacing: .26em; text-transform: uppercase; color: rgba(244, 241, 238, .76); }
+/* Placa */
+.layer--board {
+  border: 1px solid rgba(244, 241, 238, .14); border-radius: 24px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 11px, rgba(224, 20, 36, .2) 11px 12px),
+    repeating-linear-gradient(0deg, transparent 0 15px, rgba(244, 241, 238, .07) 15px 16px),
+    linear-gradient(162deg, #1a141a, #0c090d);
+}
+.layer--board i { position: absolute; left: 17%; top: 24%; width: 48%; height: 19%; border-radius: 5px; background: #241d26; box-shadow: inset 0 0 0 1px rgba(244, 241, 238, .18), 0 8px 20px -10px #000; }
+.layer--board i::after { content: ""; position: absolute; left: 12%; top: 118%; width: 60%; height: 70%; border-radius: 4px; background: #1d1720; box-shadow: inset 0 0 0 1px rgba(244, 241, 238, .13); }
+/* Bateria */
+.layer--batt {
+  border: 1px solid rgba(244, 241, 238, .12); border-radius: 24px;
+  background: linear-gradient(172deg, #16121a, #0a080c);
+}
+.layer--batt i {
+  position: absolute; inset: 15% 13% 19%; border-radius: 10px;
+  background: linear-gradient(180deg, rgba(224, 20, 36, .8), rgba(122, 10, 20, .45));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16);
+}
+/* Estrutura (chassi) */
+.layer--frame {
+  background: none; border: 7px solid #3a333c; border-radius: 30px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1), 0 0 0 1px rgba(0, 0, 0, .7);
+}
+/* Capinha */
+.layer--case {
+  inset: -11px; border-radius: 37px;
+  border: 11px solid rgba(244, 241, 238, .88);
+  background: rgba(244, 241, 238, .035);
+}
+
+/* --- 3D (hero-3d.js): o canvas desenha as peças no lugar das camadas em CSS, que ficam invisíveis mas continuam
+   calculando a coreografia. Sem WebGL, .has-3d não entra e tudo acima vale como antes. --- */
+.stage__gl { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
+.stage__gl.is-grabbing { cursor: grabbing; }
+.stage.has-3d .device { visibility: hidden; }
+/* O texto da abertura cobre o palco inteiro: só os blocos dele recebem o mouse, o resto é do celular */
+.stage.has-3d .intro { pointer-events: none; }
+.stage.has-3d .intro .wrap > * { pointer-events: auto; }
+
+/* --- Legenda narrativa --- */
+.stage__caption {
+  position: absolute; left: 0; right: 0; bottom: clamp(22px, 3.4vh, 40px); z-index: 5;
+  height: 3.4em; padding-inline: 22px; text-align: center;
+  opacity: clamp(0, calc((var(--p) - .09) * 9), 1);
+}
+.stage__caption b {
+  position: absolute; inset: 0; display: grid; place-content: center;
+  font: 400 clamp(.9rem, 1.6vw, 1.05rem)/1.55 var(--sans); color: var(--dim);
+  opacity: 0; transition: opacity .55s var(--ease);
+}
+.stage__caption b.is-on { opacity: 1; }
+
+.scroll-hint {
+  position: absolute; left: 0; right: 0; bottom: 26px; z-index: 5;
+  display: grid; justify-items: center; gap: 10px;
+  font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--dim);
+  opacity: clamp(0, calc(1 - var(--p) * 10), 1);
+}
+.scroll-hint i { width: 1px; height: 34px; background: linear-gradient(var(--dim), transparent); }
+
+@media (min-width: 900px) {
+  .hero { height: 560vh; }
+  .device { --ox: 27vw; --oy: 0px; --sc: .9; width: min(272px, 20vw); }
+  /* Coluna de texto à esquerda, celular à direita: nenhum dos dois invade o outro */
+  .intro .wrap { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); }
+  .intro .wrap > * { grid-column: 1; }
+}
+
+/* Telas estreitas: rótulos mais curtos e dispositivo deslocado para a esquerda */
+@media (max-width: 759px) {
+  .hero { height: 460vh; }
+  /* O celular "nasce" de baixo: o texto fica livre na parte de cima */
+  .intro { align-content: start; padding-top: clamp(92px, 14vh, 140px); }
+  .intro .lead { margin-top: 16px; }
+  .intro .actions { margin-top: 26px; }
+  .device { --oy: 44vh; --sc: .58; --shift: -7vw; }
+  /* A dica de scroll cai sobre o celular: vira uma pílula legível, sem a linha */
+  .scroll-hint { bottom: 18px; }
+  .scroll-hint i { display: none; }
+  .scroll-hint span { padding: 8px 13px; border-radius: 999px; background: rgba(8, 7, 10, .72); backdrop-filter: blur(5px); }
+  /* No mobile o índice vira uma linha no topo: o dispositivo fica com a largura toda */
+  .parts {
+    top: clamp(88px, 13vh, 118px); left: 0; right: 0; translate: 0 0;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 14px; padding-inline: 18px;
+  }
+  .parts li { font-size: .6rem; letter-spacing: .14em; padding-left: 14px; }
+  .parts li::before { width: 8px; }
+  .stage__caption { height: 4.4em; }
+}
+@media (max-width: 390px) {
+  .intro .actions .btn { width: 100%; }
+  .device { width: 46vw; }
+}
+
+/* Sem motion, a abertura vira uma composição estática já "desmontada". */
+@media (prefers-reduced-motion: reduce) {
+  .hero { height: auto; }
+  .stage { --p: 1 !important; position: static; display: block; height: auto; padding: 150px 0 300px; overflow: visible; }
+  .stage__glow { top: 10%; left: 50%; translate: -50% 0; }
+  .intro { position: static; visibility: visible; opacity: 1; transform: none; }
+  .device { margin: 150px auto 0; --ox: 0px; --oy: 0px; --sc: 1; --shift: 0px; }
+  .parts {
+    position: static; translate: 0 0; display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 10px 20px; margin: 64px auto 0; max-width: 680px;
+  }
+  .stage__caption, .scroll-hint { display: none; }
+}

@@ -1,0 +1,68 @@
+/* Painel contido: não vai de borda a borda; o brilho vermelho fica dentro dele */
+.final { padding: var(--pad) 0; }
+.final .wrap { width: min(1040px, 100% - 44px); }
+.final__grid {
+  display: grid; gap: 56px; align-items: center;
+  padding: clamp(28px, 5vw, 64px); border: 1px solid var(--line); border-radius: 20px;
+  background: radial-gradient(80% 100% at 50% 100%, rgba(224, 20, 36, .24), transparent 70%), var(--ink-2);
+}
+.final h2 { font-size: clamp(1.9rem, 4.6vw, 3.1rem); }
+
+/* Monte sua mensagem: serviço + modelo */
+.ask { display: grid; gap: 26px; max-width: 540px; margin-top: 36px; }
+.ask__opts { margin: 0; padding: 0; border: 0; min-width: 0; }
+.ask__opts legend, .ask__field > span { padding: 0; margin-bottom: 12px; font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); }
+.ask__opts div { display: flex; flex-wrap: wrap; gap: 10px; }
+.ask__opts label { position: relative; }
+.ask__opts input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.ask__opts span {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 99px;
+  border: 1px solid rgba(244, 241, 238, .25); font: 500 .92rem/1 var(--sans);
+  transition: background .3s var(--ease), border-color .3s var(--ease);
+}
+.ask__opts label:hover span { border-color: var(--bone); }
+.ask__opts input:checked + span { background: var(--red); border-color: var(--red); color: #fff; }
+.ask__opts input:focus-visible + span { outline: 2px solid var(--bone); outline-offset: 3px; }
+.ask__field { display: grid; }
+.ask__field input {
+  width: 100%; min-height: 56px; padding: 0 18px; border-radius: 4px;
+  border: 1px solid rgba(244, 241, 238, .25); background: rgba(244, 241, 238, .04); color: var(--bone);
+  font: 400 1rem/1 var(--sans); transition: border-color .3s var(--ease);
+}
+.ask__field input::placeholder { color: var(--dim); }
+.ask__field input:focus { outline: none; border-color: var(--bone); }
+.ask .btn { justify-self: start; }
+.ask__note { color: var(--dim); font-size: .9rem; }
+
+/* Prévia: o WhatsApp escuro, com a mensagem sendo digitada */
+.mock--chat { --w: 280px; --sc-bg: #0b141a; }
+.mock--chat .mock__phone { aspect-ratio: 9 / 15; }
+.mock--chat .mchat { flex: 1; align-content: start; margin-top: 14px; }
+.mock--chat .bubble--out { display: grid; gap: 4px; max-width: 92%; background: #005c4b; color: #e9edef; font-size: .84rem; }
+.mock--chat .bubble small { justify-self: end; font-size: .62rem; color: rgba(233, 237, 239, .65); }
+.bubble.is-typing #ask-preview::after { content: ""; display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: -2px; background: currentColor; animation: caret .8s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.mcomp { display: flex; align-items: center; gap: 8px; }
+.mcomp span { flex: 1; padding: 10px 14px; border-radius: 99px; background: #1f2c33; color: #8696a0; font-size: .74rem; }
+.mcomp i { flex: none; width: 36px; height: 36px; border-radius: 50%; background: #00a884; }
+
+@media (min-width: 900px) {
+  .final__grid { grid-template-columns: minmax(0, 1fr) 300px; gap: 80px; }
+  .mock--chat { --w: 300px; }
+}
+
+/* Selo que gira: atalho para o WhatsApp no canto do painel */
+.final__grid { position: relative; }
+.seal {
+  position: absolute; z-index: 2; top: -52px; right: clamp(18px, 4vw, 52px);
+  width: 108px; height: 108px; display: grid; place-items: center; border-radius: 50%;
+  background: var(--wa); color: #fff; box-shadow: 0 20px 40px -18px rgba(0, 0, 0, .85);
+  transition: background .3s var(--ease), transform .3s var(--ease);
+}
+.seal:hover { background: var(--wa-hover); transform: scale(1.05); }
+.seal__ring { position: absolute; inset: 0; width: 100%; height: 100%; fill: #fff; font: 600 9px/1 var(--sans); letter-spacing: .12em; animation: seal 18s linear infinite; }
+@keyframes seal { to { transform: rotate(360deg); } }
+@media (max-width: 759px) {
+  .seal { top: -44px; width: 88px; height: 88px; }
+  .seal__icon { width: 24px; height: 24px; }
+}

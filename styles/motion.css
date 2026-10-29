@@ -1,0 +1,19 @@
+/* Motion compartilhado (scripts/motion.js). Sem JS ou com reduced-motion, nada aqui esconde conteúdo. */
+
+/* Títulos: cada palavra sobe de dentro da própria linha */
+.split .w { display: inline-block; overflow: hidden; vertical-align: top; padding: .12em 0 .1em; margin: -.12em 0 -.1em; }
+.split .w > span { display: inline-block; transform: translateY(108%); transition: transform .95s var(--ease); transition-delay: calc(var(--wi) * 45ms); }
+.split.is-in .w > span { transform: none; }
+
+/* Luz que segue o cursor em painéis marcados com data-light */
+[data-light] { position: relative; }
+[data-light]::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(244, 241, 238, .07), transparent 62%);
+  opacity: 0; transition: opacity .45s var(--ease);
+}
+[data-light].is-lit::before { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .split .w > span { transform: none; }
+}

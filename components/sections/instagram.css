@@ -1,0 +1,16 @@
+.insta { background: linear-gradient(140deg, var(--red-deep), #15070a 62%); border-block: 1px solid var(--line); }
+.insta__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; align-items: center; }
+.insta h2 { margin-top: 16px; font-size: clamp(1.8rem, 4vw, 2.7rem); }
+.insta { --soft: #e3cdd0; }
+.insta .eyebrow { color: #ff8d97; }
+.insta__sub { margin-top: 20px; max-width: 52ch; color: var(--soft); }
+.insta__sub b { font-weight: 500; color: var(--bone); }
+.insta__cta { margin-top: 32px; display: inline-flex; align-items: center; gap: 16px; padding: 22px 26px; border: 1px solid rgba(244, 241, 238, .25); border-radius: 6px; text-decoration: none; transition: background .35s var(--ease), border-color .35s; }
+.insta__cta:hover { background: rgba(244, 241, 238, .07); border-color: var(--bone); }
+.insta__cta { max-width: 100%; }
+.insta__cta > span { min-width: 0; overflow-wrap: anywhere; display: grid; gap: 4px; font-size: .88rem; color: var(--soft); }
+.insta__cta b { font: 600 1.05rem/1.2 var(--disp); color: var(--bone); letter-spacing: -.01em; }
+
+@media (min-width: 900px) {
+  .insta__grid { grid-template-columns: minmax(0, 1fr) 320px; gap: 80px; }
+}

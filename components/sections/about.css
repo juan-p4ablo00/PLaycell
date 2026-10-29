@@ -1,0 +1,25 @@
+/* Sobre (fatos da loja). */
+.sobre { border-top: 1px solid var(--line); }
+.sobre__body .statement { margin-top: 16px; }
+.statement { font-size: clamp(1.7rem, 3.5vw, 2.7rem); max-width: 26ch; }
+.sobre__body > p { margin-top: 26px; max-width: 54ch; color: var(--dim); font-size: 1.05rem; }
+.stats { display: grid; gap: 22px; margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--line); }
+.stats dt { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); }
+.stats dd { margin: 8px 0 0; font: 800 1.9rem/1 var(--disp); letter-spacing: -.03em; }
+.stats dd span { display: block; margin-top: 8px; font: 400 .88rem/1.4 var(--sans); letter-spacing: 0; color: var(--dim); }
+
+@media (min-width: 760px) {
+  .stats { grid-template-columns: repeat(3, 1fr); gap: 36px; }
+}
+
+/* Faixas cruzadas no topo da seção: os serviços e o endereço correndo em sentidos opostos */
+.ribbons { position: relative; height: clamp(116px, 13vw, 170px); margin: calc(var(--pad) * -1) 0 clamp(44px, 6vw, 80px); overflow: hidden; }
+.ribbon {
+  position: absolute; left: -6%; right: -6%; top: 50%; display: flex; overflow: hidden; white-space: nowrap;
+  padding: 13px 0; font: 800 clamp(.88rem, 1.5vw, 1.15rem)/1 var(--disp); letter-spacing: .05em; text-transform: uppercase;
+}
+.ribbon--red { z-index: 1; background: var(--red); color: #fff; transform: translateY(-50%) rotate(-3deg); box-shadow: 0 12px 30px -16px rgba(122, 10, 20, .7); }
+.ribbon--ink { background: #16121a; color: #f4f1ee; transform: translateY(-50%) rotate(2.4deg); }
+.ribbon span { flex: none; padding-right: .3em; animation: ribbon 40s linear infinite; }
+.ribbon--ink span { animation-direction: reverse; animation-duration: 52s; }
+@keyframes ribbon { to { transform: translateX(-100%); } }
