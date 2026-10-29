@@ -1,98 +1,148 @@
-.visitar__grid { display: grid; gap: 44px; align-items: center; }
-.visitar address { margin-top: 32px; font-size: 1.15rem; line-height: 1.75; }
-.meta { display: grid; gap: 18px; margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--line); }
-.meta dt { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); }
-.meta dd { margin: 5px 0 0; }
-.meta a { display: inline-block; padding-block: 12px; margin-block: -12px; text-underline-offset: 4px; }
-.visitar .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
-/* Aberto/fechado agora: preenchido pelo site.js (sem JS fica vazio e some) */
-.status { display: inline-flex; align-items: center; gap: 7px; margin-left: 8px; padding: 5px 11px; border-radius: 99px; background: #e4dfda; font: 600 .72rem/1 var(--sans); vertical-align: 1px; white-space: nowrap; }
-.status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #6f676c; }
-.status.is-open { background: #d6f1de; }
-.status.is-open::before { background: #0f7a40; }
-.status:empty { display: none; }
-.visitar__map { position: relative; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; aspect-ratio: 4 / 3; max-height: 440px; background: var(--ink-2); }
-/* Coordenadas reais da loja: um detalhe técnico, não decoração */
-.visitar__coords {
-  position: absolute; z-index: 1; left: 14px; bottom: 14px; padding: 7px 11px; border-radius: 3px;
-  background: rgba(241, 238, 234, .92); color: var(--bone);
-  font: 600 .7rem/1 var(--disp); letter-spacing: .12em; font-variant-numeric: tabular-nums; pointer-events: none;
+/* =========================================================
+   LOJA — painel escuro (como o do NoteCell) dentro da seção clara: texto + mapa das ruas reais.
+   O mapa e o "Como chegar" abrem a escolha do app (location.js).
+   ========================================================= */
+.loc {
+  --bone: #f5f2f0; --dim: #a19a98; --line: rgba(255, 255, 255, .08); --line-2: rgba(255, 255, 255, .14);
+  position: relative; display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); gap: clamp(18px, 3vw, 40px);
+  padding: clamp(12px, 1.4vw, 18px); border-radius: 32px; color: var(--bone);
+  background: radial-gradient(70% 120% at 0% 100%, rgba(255, 43, 43, .12), transparent 60%), #0b0b0c;
+  box-shadow: inset 0 0 0 1px var(--line), inset 0 1px 0 rgba(255, 255, 255, .06), 0 50px 100px -60px rgba(22, 18, 26, .7);
 }
-.visitar__map iframe { width: 100%; height: 100%; border: 0; filter: grayscale(.85) contrast(1.02); transition: filter .5s var(--ease); }
-.visitar__map:hover iframe { filter: grayscale(0) contrast(1); }
+.loc__copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(18px, 3.2vw, 46px) clamp(10px, 2.2vw, 30px); }
+.loc__tag {
+  display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; padding: 6px 12px 6px 10px; border-radius: 99px;
+  background: rgba(255, 43, 43, .14); box-shadow: inset 0 0 0 1px rgba(255, 43, 43, .4); color: #fff;
+  font: 500 .7rem/1 var(--sans); letter-spacing: .14em; text-transform: uppercase;
+}
+.loc__tag i { width: 7px; height: 7px; border-radius: 50%; background: var(--red); box-shadow: 0 0 8px var(--red); }
+.loc h2 { margin-top: 18px; font-size: clamp(1.9rem, 3.4vw, 2.8rem); }
+.loc__addr { margin-top: 20px; font-size: clamp(1.05rem, 1.35vw, 1.25rem); line-height: 1.5; }
+.loc__addr span { display: block; color: var(--dim); }
+.loc__hours { margin-top: 14px; color: var(--dim); font-size: .95rem; }
+.loc__btns { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; margin-top: clamp(24px, 2.8vw, 34px); }
 
-@media (min-width: 900px) {
-  .visitar__grid { grid-template-columns: 1fr 1.05fr; gap: 70px; }
+/* Aberto/fechado agora: preenchido pelo site.js (sem JS fica vazio e some) */
+.status { display: inline-flex; align-items: center; gap: 7px; margin-left: 8px; padding: 5px 11px; border-radius: 99px; background: rgba(255, 255, 255, .08); color: var(--bone); font: 600 .72rem/1 var(--sans); vertical-align: 1px; white-space: nowrap; }
+.status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #8a8186; }
+.status.is-open { background: rgba(15, 122, 64, .22); }
+.status.is-open::before { background: #2fd27a; box-shadow: 0 0 8px #2fd27a; }
+.status:empty { display: none; }
+
+/* Botão de metal: pílula escura com a esfera clara; a seta passa por dentro dela no hover */
+.metal-btn {
+  --orb: 40px;
+  position: relative; display: inline-flex; align-items: center; gap: 14px; height: 52px; padding: 0 6px 0 24px; border: 0; border-radius: 99px;
+  background: radial-gradient(120% 140% at 50% 0%, #1c1a1a, #080707 70%); color: var(--bone); cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(245, 236, 234, .28), 0 18px 50px -18px rgba(255, 43, 43, .5);
+  font: 500 .95rem/1 var(--sans); white-space: nowrap; text-decoration: none; transition: transform .18s var(--ease);
+}
+.metal-btn:active { transform: scale(.97); }
+.metal-btn__orb {
+  position: relative; display: grid; place-items: center; overflow: hidden; width: var(--orb); height: var(--orb); border-radius: 50%; color: #0b0c10;
+  background: linear-gradient(160deg, #fff, #e9e6e6 45%, #bdb6b6);
+  box-shadow: inset 0 1px 0 #fff, inset 0 -2px 5px rgba(0, 0, 0, .2), 0 4px 18px -6px rgba(255, 120, 110, .55);
+}
+.metal-btn__orb svg { position: absolute; width: 16px; height: 16px; transition: transform .35s var(--ease); }
+.metal-btn__orb svg + svg { transform: translateX(calc(var(--orb) / -2 - 50% - 2px)); }
+@media (hover: hover) {
+  .metal-btn:hover .metal-btn__orb svg:first-child { transform: translateX(calc(var(--orb) / 2 + 50% + 2px)); }
+  .metal-btn:hover .metal-btn__orb svg + svg { transform: none; }
+}
+.pill {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 18px 0 8px; border: 0; border-radius: 99px; cursor: pointer;
+  background: rgba(255, 255, 255, .03); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--bone); font: 400 .95rem/1 var(--sans);
+  transition: background .35s, transform .2s var(--ease);
+}
+.pill i { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, .07); }
+.pill svg { width: 16px; height: 16px; }
+@media (hover: hover) { .pill:hover { background: rgba(255, 255, 255, .08); } }
+.pill:active { transform: scale(.96); }
+
+/* Mapa: as ruas reais em volta da loja, com o pino e o atalho para os apps */
+.map {
+  position: relative; display: block; width: 100%; min-height: clamp(320px, 34vw, 470px); padding: 0; border: 0; border-radius: 24px; overflow: hidden; isolation: isolate;
+  background: #0b0b0c; box-shadow: inset 0 0 0 1px var(--line-2); cursor: pointer; text-align: left; color: var(--bone); text-decoration: none;
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
+}
+.map:active { transform: scale(.99); }
+@media (hover: hover) { .map:hover { box-shadow: inset 0 0 0 1px rgba(255, 43, 43, .45), 0 30px 80px -40px rgba(255, 30, 24, .6); } }
+.map__art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.map__shade { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(75% 70% at 50% 48%, transparent 45%, rgba(0, 0, 0, .55) 100%), linear-gradient(rgba(255, 255, 255, .06), transparent 22%); }
+.map__pin { position: absolute; left: 50%; top: 50%; width: 0; height: 0; pointer-events: none; }
+.map__pulse { position: absolute; left: -60px; top: -60px; width: 120px; height: 120px; border-radius: 50%; border: 1px solid rgba(255, 60, 50, .6); background: radial-gradient(closest-side, rgba(255, 43, 43, .28), transparent); animation: pulse 2.6s var(--ease) infinite; }
+.map__pulse + .map__pulse { animation-delay: 1.3s; }
+@keyframes pulse { from { transform: scale(.2); opacity: 1; } to { transform: scale(1); opacity: 0; } }
+.map__drop { position: absolute; left: -17px; top: -46px; width: 34px; height: 46px; filter: drop-shadow(0 0 12px rgba(255, 43, 43, .85)) drop-shadow(0 10px 10px rgba(0, 0, 0, .6)); animation: bob 3.4s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(-6px); } }
+.map__label {
+  position: absolute; left: 24px; top: -62px; display: flex; flex-direction: column; gap: 3px; padding: 10px 14px; border-radius: 14px; white-space: nowrap;
+  background: rgba(14, 14, 15, .86); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: inset 0 0 0 1px var(--line-2), 0 20px 40px -20px #000;
+}
+.map__label b { font: 600 .88rem/1.1 var(--disp); color: #fff; }
+.map__label span { color: var(--dim); font-size: .75rem; }
+.map__cta {
+  position: absolute; left: 16px; right: 16px; bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 8px 8px 8px 16px; border-radius: 99px; background: rgba(14, 14, 15, .82); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  box-shadow: inset 0 0 0 1px var(--line-2); font-size: .88rem;
+}
+.map__cta .go { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #fff; color: #000; }
+.map__cta .go svg { width: 16px; height: 16px; transition: transform .6s var(--ease); }
+@media (hover: hover) { .map:hover .map__cta .go svg { transform: rotate(-45deg); } }
+.map__credit { position: absolute; top: 12px; right: 14px; color: rgba(245, 242, 240, .5); font-size: .62rem; }
+
+@media (max-width: 860px) {
+  .loc { grid-template-columns: 1fr; border-radius: 28px; }
+  .loc__copy { padding-bottom: 6px; }
+  .map { min-height: clamp(300px, 86vw, 420px); }
+  .map__label { left: -80px; top: -118px; }
 }
 
 /* =========================================================
-   A CAMINHO — route.js: --g (o quadro cresce) e --k (a rota anda, quadro a quadro).
-   Padrão (sem JS ou com reduced-motion): o quadro final, as etapas e o botão, sem fixar nada.
+   ESCOLHA DO APP — <dialog> nativo (foco, ESC e fundo inerte vêm do navegador).
+   No celular vira uma folha que sobe de baixo.
    ========================================================= */
-.grow { --route-bg: #060607; background: var(--route-bg); padding: var(--pad) 0; }
-.grow__pin { display: grid; gap: 36px; width: min(1180px, 100% - 44px); margin-inline: auto; }
-.grow__word { display: none; }
-.grow__card { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border-radius: 18px; background: var(--route-bg); }
-.grow__still { width: 100%; height: 100%; object-fit: cover; }
-.grow__credit { position: absolute; right: 12px; bottom: 10px; margin: 0; font-size: .66rem; color: rgba(244, 241, 238, .62); }
-.route { display: grid; gap: 22px; justify-items: start; }
-.route__title { font-size: clamp(1.6rem, 3.4vw, 2.6rem); }
-.route__steps { display: flex; flex-wrap: wrap; gap: 12px 28px; }
-.route__steps li { display: flex; align-items: center; gap: 11px; font: 500 .72rem/1 var(--sans); letter-spacing: .18em; text-transform: uppercase; color: var(--bone); }
-.route__steps li::before { content: ""; flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 3px rgba(224, 20, 36, .22); }
+.gs {
+  --bone: #f5f2f0; --dim: #a19a98; --line: rgba(255, 255, 255, .08); --line-2: rgba(255, 255, 255, .14);
+  width: min(460px, 100vw - 32px); max-height: calc(100svh - 32px); margin: auto; padding: 0; border: 0; border-radius: 28px; overflow: auto; overscroll-behavior: contain;
+  background: radial-gradient(120% 60% at 50% 0%, rgba(255, 43, 43, .12), transparent 60%), #0f0f10; color: var(--bone);
+  box-shadow: inset 0 0 0 1px var(--line-2), inset 0 1px 0 rgba(255, 255, 255, .08), 0 40px 120px -20px #000, 0 0 90px -40px rgba(255, 43, 43, .6);
+}
+.gs[open] { animation: gs-in .5s var(--ease); }
+.gs::backdrop { background: rgba(0, 0, 0, .62); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+@keyframes gs-in { from { opacity: 0; transform: translateY(26px) scale(.97); } }
+@keyframes gs-up { from { transform: translateY(100%); } }
+.gs__in { padding: 24px 18px 18px; } /* o fundo do <dialog> é só a moldura: clicar fora do miolo fecha */
+.gs__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 0 6px 14px; }
+.gs__head h2 { font-size: 1.35rem; font-weight: 600; letter-spacing: -.025em; }
+.gs__head p { margin-top: 6px; color: var(--dim); font-size: .85rem; line-height: 1.45; }
+.gs__x { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: none; color: var(--bone); cursor: pointer; box-shadow: inset 0 0 0 1px var(--line-2); }
+.gs__x svg { width: 18px; height: 18px; }
+.gs__list { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; }
+.gs__opt {
+  display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; align-items: center; gap: 14px; width: 100%; padding: 11px 12px; border: 0; border-radius: 18px;
+  background: none; color: var(--bone); text-align: left; text-decoration: none; font: inherit; cursor: pointer; transition: background .3s, transform .2s var(--ease);
+}
+@media (hover: hover) { .gs__opt:hover { background: rgba(255, 255, 255, .05); } .gs__opt:hover .gs__arr { transform: translateX(3px); color: var(--bone); } }
+.gs__opt:active { transform: scale(.98); }
+.gs__ic { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 15px; background: #19191b; color: #ff5d55; box-shadow: inset 0 0 0 1px var(--line), inset 0 1px 0 rgba(255, 255, 255, .06); }
+.gs__ic svg { width: 22px; height: 22px; }
+.gs__opt b { display: block; font-size: .98rem; font-weight: 500; }
+.gs__opt small { display: block; margin-top: 3px; color: var(--dim); font-size: .82rem; }
+.gs__arr { color: #6f6967; transition: transform .4s var(--ease), color .3s; }
+.gs__arr svg { display: block; width: 16px; height: 16px; }
+.gs__sep { height: 1px; margin: 8px 12px; background: var(--line); }
+.gs__note { padding: 10px 12px 4px; color: #6f6967; font-size: .76rem; line-height: 1.45; }
+@media (max-width: 620px) {
+  .gs { width: 100%; max-width: 100%; max-height: 88svh; margin: auto 0 0; border-radius: 26px 26px 0 0; }
+  .gs__in { padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
+  .gs[open] { animation-name: gs-up; }
+}
 
-/* --- Ao vivo --- */
-.grow.is-live { --g: 0; --k: 0; height: 690vh; padding: 0; }
-.grow.is-live .grow__pin { position: sticky; top: 0; display: block; width: auto; height: 100vh; height: 100svh; overflow: hidden; }
-.grow.is-live .grow__card {
-  --cw: min(30vw, 380px); --ch: min(24svh, 240px);
-  position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0;
-  clip-path: inset(calc((1 - var(--g)) * (50% - var(--ch) / 2)) calc((1 - var(--g)) * (50% - var(--cw) / 2)) round calc((1 - var(--g)) * 20px));
+/* Aviso curto ("Endereço copiado") */
+.toast {
+  position: fixed; z-index: 120; left: 50%; bottom: 96px; padding: 12px 18px; border-radius: 99px; pointer-events: none;
+  background: #f5f2f0; color: #0b0b0c; font-size: .9rem; font-weight: 500; box-shadow: 0 20px 40px -16px rgba(0, 0, 0, .6);
+  opacity: 0; transform: translate(-50%, 10px); transition: opacity .3s var(--ease), transform .3s var(--ease);
 }
-.grow.is-live .grow__still { display: none; }
-.grow__canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
-.grow.is-live .grow__credit { z-index: 3; top: 76px; right: 18px; bottom: auto; opacity: var(--g); } /* embaixo à direita já está o crédito gravado no mapa */
-/* "Vem [quadro] pra loja.": as palavras abrem caminho enquanto o quadro cresce */
-.grow.is-live .grow__word {
-  display: block; position: absolute; z-index: 2; top: 50%; margin: 0;
-  font: 800 clamp(2.6rem, 8vw, 8rem)/1 var(--disp); letter-spacing: -.045em; white-space: nowrap;
-  opacity: clamp(0, calc(1 - var(--g) * 1.8), 1);
-}
-.grow.is-live .grow__word--l { right: calc(50% + min(30vw, 380px) / 2 + 2.4vw); transform: translate(calc(var(--g) * -30vw), -50%); }
-.grow.is-live .grow__word--r { left: calc(50% + min(30vw, 380px) / 2 + 2.4vw); color: var(--red-text); transform: translate(calc(var(--g) * 30vw), -50%); }
-/* Escurece a lateral para a trilha ler sobre o mapa */
-.grow.is-live .grow__pin::after {
-  content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  background: linear-gradient(90deg, rgba(6, 6, 7, .82), rgba(6, 6, 7, 0) 48%); opacity: var(--g);
-}
-.grow.is-live .route {
-  position: absolute; z-index: 3; left: max(22px, (100% - 1180px) / 2); bottom: clamp(28px, 8vh, 72px);
-  width: min(27rem, calc(100% - 44px)); opacity: clamp(0, calc((var(--g) - .8) * 5), 1);
-}
-.grow.is-live .route__steps { position: relative; flex-direction: column; gap: 18px; }
-.grow.is-live .route__steps::before,
-.grow.is-live .route__steps::after { content: ""; position: absolute; left: 4px; top: 4px; bottom: 4px; width: 1px; background: rgba(244, 241, 238, .2); }
-.grow.is-live .route__steps::after { background: var(--red); transform: scaleY(var(--k)); transform-origin: top; }
-.grow.is-live .route__steps li { position: relative; z-index: 1; color: rgba(244, 241, 238, .45); transition: color .4s var(--ease); }
-.grow.is-live .route__steps li::before { background: var(--route-bg); box-shadow: inset 0 0 0 1.5px rgba(244, 241, 238, .45); transition: background .4s var(--ease), box-shadow .4s var(--ease); }
-.grow.is-live .route__steps li.is-on { color: var(--bone); }
-.grow.is-live .route__steps li.is-on::before { background: var(--red); box-shadow: 0 0 0 3px rgba(224, 20, 36, .25); }
-/* O título e o botão chegam junto com o pino da loja */
-.grow.is-live .route__title,
-.grow.is-live .route .btn { opacity: 0; translate: 0 14px; transition: opacity .6s var(--ease), translate .6s var(--ease); }
-.grow.is-live.is-end .route__title,
-.grow.is-live.is-end .route .btn { opacity: 1; translate: 0 0; }
-.grow.is-live:not(.is-end) .route .btn { pointer-events: none; }
-
-/* Celular: palavras acima e abaixo do quadro; a trilha vira uma linha no rodapé da tela */
-@media (max-width: 759px) {
-  .grow.is-live .grow__card { --cw: 62vw; --ch: 22svh; }
-  .grow.is-live .grow__word { left: 50%; right: auto; font-size: clamp(2.4rem, 13vw, 4rem); }
-  .grow.is-live .grow__word--l { top: calc(50% - 11svh - .62em); transform: translate(-50%, calc(-50% - var(--g) * 30svh)); }
-  .grow.is-live .grow__word--r { top: calc(50% + 11svh + .62em); transform: translate(-50%, calc(-50% + var(--g) * 30svh)); }
-  .grow.is-live .grow__pin::after { background: linear-gradient(0deg, rgba(6, 6, 7, .92), rgba(6, 6, 7, 0) 42%); }
-  .grow.is-live .route { left: 22px; right: 22px; width: auto; bottom: 22px; gap: 16px; }
-  .grow.is-live .route__title { font-size: 1.45rem; }
-  .grow.is-live .route__steps { flex-direction: row; flex-wrap: wrap; gap: 12px 18px; }
-  .grow.is-live .route__steps::before, .grow.is-live .route__steps::after { display: none; }
-}
+.toast.is-on { opacity: 1; transform: translate(-50%, 0); }

@@ -46,28 +46,12 @@
     reveals.forEach((el) => el.classList.add('is-in'));
   }
 
-  /* Grade do perfil do Instagram: o vídeo só roda enquanto aparece; com reduced-motion fica o poster */
-  const igVideo = document.querySelector('.mgrid video');
-  if (igVideo && !matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
-    new IntersectionObserver(([e]) => (e.isIntersecting ? igVideo.play().catch(() => {}) : igVideo.pause())).observe(igVideo);
-  }
-
-  /* Celular que vira (Instagram): --f vai de 0 (traseira) a 1 (perfil) enquanto o aparelho sobe na tela.
-     A posição é medida no resize; no scroll só se escreve um número. */
-  const flip = document.querySelector('.mock--flip');
-  if (flip && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    let top = 0;
-    const turn = () => {
-      const f = Math.min(Math.max((scrollY + innerHeight - top) / (innerHeight * .8), 0), 1);
-      flip.style.setProperty('--f', (f * f * (3 - 2 * f)).toFixed(3));
-    };
-    const place = () => { top = flip.getBoundingClientRect().top + scrollY; turn(); };
-    // setTimeout: mede depois que o four-things.js (que roda depois deste) ajusta a altura da sua seção
-    const later = () => setTimeout(place);
-    addEventListener('scroll', turn, { passive: true });
-    addEventListener('resize', later);
-    addEventListener('load', later);
-    later();
+  /* Vídeos decorativos (cards e Instagram): só rodam enquanto aparecem; com reduced-motion fica o poster */
+  const videos = document.querySelectorAll('video[data-inview]');
+  if (videos.length && !matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+    const vio = new IntersectionObserver((entries) => entries.forEach(({ target, isIntersecting }) => (
+      isIntersecting ? target.play().catch(() => {}) : target.pause())));
+    videos.forEach((v) => vio.observe(v));
   }
 
   /* Aberto/fechado agora (Instagram da loja: seg a sáb, 08:00 às 19:00) */

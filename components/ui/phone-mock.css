@@ -27,47 +27,6 @@
 .bubble { max-width: 86%; margin: 0; padding: 9px 12px; border-radius: 14px; font-size: .8rem; line-height: 1.4; }
 .bubble--out { justify-self: end; border-bottom-right-radius: 4px; }
 
-/* Celular que vira: o scroll (--f, 0 → 1, escrito pelo site.js) gira o aparelho da traseira até a tela */
-.mock--flip { perspective: 1400px; }
-.mock__card { position: relative; transform-style: preserve-3d; }
-.js .mock--flip .mock__card { transform: rotateY(calc((1 - var(--f, 1)) * 180deg)) rotateZ(calc((1 - var(--f, 1)) * -7deg)); }
-.mock--flip .mock__phone, .mock__back { -webkit-backface-visibility: hidden; backface-visibility: hidden; }
-.mock__back {
-  position: absolute; inset: 0; display: grid; place-items: center; transform: rotateY(180deg);
-  border: 9px solid var(--bezel); border-radius: 42px; color: var(--red);
-  background: linear-gradient(155deg, #2b2631, #121016 60%);
-  box-shadow: 0 46px 50px -36px rgba(0, 0, 0, .7);
-}
-/* Módulo de câmera: dois anéis de lente desenhados com gradiente */
-.mock__back::before {
-  content: ""; position: absolute; top: 18px; left: 18px; width: 96px; height: 96px; border-radius: 28px;
-  background: radial-gradient(circle at 30% 30%, #050407 13px, #2f2a34 14px 18px, transparent 19px),
-              radial-gradient(circle at 30% 72%, #050407 13px, #2f2a34 14px 18px, transparent 19px), #0d0b10;
-  box-shadow: inset 0 0 0 1px rgba(244, 241, 238, .08);
-}
-@media (prefers-reduced-motion: reduce) {
-  .js .mock--flip .mock__card { transform: none; }
-}
-
-/* Perfil do Instagram (dados reais; a grade é o vídeo da gravação, recortada em 3 colunas) */
-.mock--ig { --sc-bg: #0b0f13; } /* o mesmo fundo do Instagram escuro: o vídeo se funde com a tela */
-.mock--ig .mock__phone { aspect-ratio: auto; gap: 8px; } /* a altura vem do conteúdo: a grade manda na proporção */
-.mprof { display: flex; align-items: center; gap: 14px; padding-top: 4px; }
-.mprof__av { flex: none; width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
-.mprof__stats { flex: 1; display: flex; justify-content: space-between; text-align: center; font-size: .62rem; color: var(--sc-dim); }
-.mprof__stats b { display: block; font: 800 .92rem/1.2 var(--disp); color: var(--sc-ink); font-variant-numeric: tabular-nums; }
-.mhandle { display: grid; margin: 0; }
-.mhandle b { font: 800 .9rem/1.2 var(--disp); letter-spacing: -.02em; }
-.mhandle small { font-size: .66rem; color: var(--sc-dim); }
-.mbio { display: grid; gap: 2px; margin: 0; font-size: .7rem; line-height: 1.35; }
-.mact { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.mact span { display: grid; place-items: center; min-height: 28px; border-radius: 8px; background: var(--sc-card); font: 600 .68rem/1 var(--sans); }
-.mhl { display: flex; gap: 14px; }
-.mhl span { display: grid; justify-items: center; gap: 4px; font-size: .6rem; color: var(--sc-dim); }
-.mhl img { width: 44px; height: 44px; border-radius: 50%; }
-.mgrid { flex: none; aspect-ratio: 564 / 412; margin: 2px -12px -14px; overflow: hidden; } /* = proporção do vídeo: nada é cortado nem esticado */
-.mgrid video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
-
 /* Subida: nasce 34px abaixo, sobe e assenta */
 .js .mock .rise { opacity: 0; transform: translateY(34px) scale(.98); }
 .js .mock.is-in .rise {

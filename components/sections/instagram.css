@@ -1,16 +1,144 @@
-.insta { background: linear-gradient(140deg, var(--red-deep), #15070a 62%); border-block: 1px solid var(--line); }
-.insta__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; align-items: center; }
-.insta h2 { margin-top: 16px; font-size: clamp(1.8rem, 4vw, 2.7rem); }
-.insta { --soft: #e3cdd0; }
-.insta .eyebrow { color: #ff8d97; }
-.insta__sub { margin-top: 20px; max-width: 52ch; color: var(--soft); }
+/* =========================================================
+   INSTAGRAM — o celular nasce no meio da tela e cresce com a rolagem até a tela do perfil.
+   site.js escreve --g (0 → 1) e, no resize, a escala inicial e a final (--s0, --s1).
+   Padrão (sem JS ou com reduced-motion): texto, celular e link, um embaixo do outro.
+   ========================================================= */
+.insta { --soft: #e3cdd0; background: linear-gradient(140deg, var(--red-deep), #15070a 62%); border-block: 1px solid var(--line); }
+.insta__pin { display: grid; justify-items: center; gap: 48px; width: min(1180px, 100% - 44px); margin-inline: auto; text-align: center; }
+.insta__copy { max-width: 760px; }
+.insta .eyebrow { justify-content: center; color: #ff8d97; }
+.insta h2 { margin-top: 16px; font-size: clamp(1.8rem, 4vw, 2.9rem); }
+.insta__sub { max-width: 52ch; margin: 18px auto 0; color: var(--soft); }
 .insta__sub b { font-weight: 500; color: var(--bone); }
-.insta__cta { margin-top: 32px; display: inline-flex; align-items: center; gap: 16px; padding: 22px 26px; border: 1px solid rgba(244, 241, 238, .25); border-radius: 6px; text-decoration: none; transition: background .35s var(--ease), border-color .35s; }
-.insta__cta:hover { background: rgba(244, 241, 238, .07); border-color: var(--bone); }
-.insta__cta { max-width: 100%; }
-.insta__cta > span { min-width: 0; overflow-wrap: anywhere; display: grid; gap: 4px; font-size: .88rem; color: var(--soft); }
-.insta__cta b { font: 600 1.05rem/1.2 var(--disp); color: var(--bone); letter-spacing: -.01em; }
+.insta__phone { width: min(300px, 100%); }
+.insta__cta {
+  display: inline-flex; align-items: center; gap: 14px; max-width: 100%; padding: 12px 22px 12px 14px; border-radius: 99px; text-align: left; text-decoration: none;
+  background: rgba(14, 12, 16, .55); border: 1px solid rgba(244, 241, 238, .22);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  transition: background .35s var(--ease), border-color .35s;
+}
+.insta__cta:hover { background: rgba(244, 241, 238, .1); border-color: var(--bone); }
+.insta__cta svg { flex: none; padding: 8px; width: 38px; height: 38px; border-radius: 50%; background: rgba(255, 255, 255, .08); }
+.insta__cta > span { min-width: 0; overflow-wrap: anywhere; display: grid; gap: 3px; font-size: .84rem; color: var(--soft); }
+.insta__cta b { font: 600 1rem/1.2 var(--disp); color: var(--bone); letter-spacing: -.01em; white-space: nowrap; }
 
-@media (min-width: 900px) {
-  .insta__grid { grid-template-columns: minmax(0, 1fr) 320px; gap: 80px; }
+/* =========================================================
+   O APP — um Instagram que funciona dentro do celular (instagram.js):
+   rolar o perfil, trocar Posts/Reels, abrir um post, ver os destaques como story.
+   Dados e capas reais do perfil público; cada post leva ao post de verdade.
+   ========================================================= */
+.mock--ig { --w: 300px; }
+.msplash { display: none; } /* a abertura só existe no modo ao vivo (ver abaixo) */
+.mock--ig .mock__phone { display: block; aspect-ratio: 9 / 19; padding: 0; background: #0b0f13; }
+.mock--ig .mock__phone::before { z-index: 6; } /* a "ilha" fica por cima do app */
+.ig { position: absolute; inset: 0; overflow: hidden; border-radius: 33px; background: #0b0f13; color: #f4f1ee; font-size: .72rem; line-height: 1.35; text-align: left; }
+.ig__screen { position: absolute; inset: 0; overflow-y: auto; padding: 34px 12px 16px; scrollbar-width: none; }
+.ig__screen::-webkit-scrollbar { display: none; }
+.ig button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.ig a { color: inherit; }
+.ig :focus-visible { outline: 2px solid #f4f1ee; outline-offset: 2px; }
+
+/* Perfil */
+.ig__top { position: sticky; top: -34px; z-index: 2; margin: -34px -12px 6px; padding: 38px 14px 10px; background: #0b0f13; font: 700 .9rem/1 var(--disp); letter-spacing: -.01em; }
+.mprof { display: flex; align-items: center; gap: 14px; }
+.mprof__av { flex: none; width: 62px; height: 62px; border-radius: 50%; object-fit: cover; }
+.mprof__stats { flex: 1; display: flex; justify-content: space-between; text-align: center; font-size: .62rem; color: #a7a1a6; }
+.mprof__stats b { display: block; font: 800 .92rem/1.2 var(--disp); color: #f4f1ee; font-variant-numeric: tabular-nums; }
+.mhandle { display: grid; margin: 10px 0 0; }
+.mhandle b { font: 700 .8rem/1.2 var(--disp); }
+.mhandle small { color: #a7a1a6; font-size: .64rem; }
+.mbio { display: grid; gap: 1px; margin: 4px 0 0; font-size: .68rem; }
+.mact { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+.mact a { display: grid; place-items: center; min-height: 30px; border-radius: 8px; background: #1d2228; font: 600 .68rem/1 var(--sans); text-decoration: none; transition: background .2s; }
+.mact a:first-child { background: #0095f6; } /* "Seguir" com a cor do botão do app */
+.mact a:hover { filter: brightness(1.12); }
+.mhl { display: flex; gap: 16px; margin-top: 12px; }
+.mhl button { display: grid; justify-items: center; gap: 4px; font-size: .6rem; color: #d7d2d5; }
+.mhl img { width: 50px; height: 50px; padding: 2px; border-radius: 50%; border: 1.5px solid #3a3f46; transition: transform .25s var(--ease); }
+.mhl button:hover img { transform: scale(1.06); }
+.ig__tabs { display: grid; grid-template-columns: 1fr 1fr; margin: 12px -12px 0; border-bottom: 1px solid #22272e; }
+.ig__tabs button { display: grid; place-items: center; height: 36px; color: #6f757c; border-bottom: 1.5px solid transparent; margin-bottom: -1px; }
+.ig__tabs button[aria-selected="true"] { color: #f4f1ee; border-color: #f4f1ee; }
+.ig__tabs svg { width: 18px; height: 18px; }
+.ig__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin: 2px -12px 0; padding: 0; list-style: none; }
+.ig__grid a { position: relative; display: block; aspect-ratio: 3 / 4; overflow: hidden; background: #161b21; }
+.ig__grid[data-tab="reel"] a { aspect-ratio: 9 / 16; }
+.ig__grid[data-tab="reel"] li[data-type="post"] { display: none; }
+.ig__grid img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s var(--ease), filter .35s; }
+.ig__grid a:hover img { transform: scale(1.05); filter: brightness(1.1); }
+.ig__badge { position: absolute; top: 5px; right: 5px; width: 14px; height: 14px; color: #fff; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .6)); }
+.ig__more { margin: 14px 0 4px; text-align: center; font-size: .66rem; }
+.ig__more a { color: #4cb5f9; text-decoration: none; }
+
+/* Post aberto */
+.ig__post { padding-top: 0; }
+.ig__bar { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 10px; margin: 0 -12px; padding: 36px 12px 10px; background: #0b0f13; font: 700 .82rem/1 var(--disp); }
+.ig__bar button { display: grid; place-items: center; width: 30px; height: 30px; margin-left: -6px; }
+.ig__bar svg { width: 18px; height: 18px; }
+.ig__author { display: flex; align-items: center; gap: 8px; padding: 6px 0 8px; font-weight: 600; }
+.ig__author img { width: 26px; height: 26px; border-radius: 50%; }
+.ig__media { display: block; width: calc(100% + 24px); max-width: none; height: auto; margin: 0 -12px; }
+.ig__icons { display: flex; gap: 12px; padding: 10px 0 6px; }
+.ig__icons svg { width: 19px; height: 19px; }
+.ig__caption { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
+.ig__caption b { margin-right: 4px; }
+.ig__date { margin-top: 6px; color: #8a9097; font-size: .6rem; }
+.ig__go { display: grid; place-items: center; min-height: 34px; margin-top: 12px; border-radius: 8px; background: #0095f6; font: 600 .7rem/1 var(--sans); text-decoration: none; }
+
+/* Destaque como story */
+.ig__story { display: grid; grid-template-rows: auto auto 1fr auto; padding: 30px 12px 16px; background: radial-gradient(70% 45% at 50% 46%, rgba(224, 20, 36, .3), transparent 70%), #050608; cursor: pointer; }
+.ig__story[hidden] { display: none; }
+.ig__progress { display: flex; gap: 3px; }
+.ig__progress i { flex: 1; height: 2px; border-radius: 2px; background: rgba(255, 255, 255, .3); overflow: hidden; }
+.ig__progress i::after { content: ""; display: block; height: 100%; background: #fff; transform: scaleX(var(--done, 0)); transform-origin: left; }
+.ig__progress i.is-now::after { animation: story 5s linear forwards; }
+@keyframes story { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.ig__shead { display: flex; align-items: center; gap: 8px; padding-top: 10px; font-weight: 600; }
+.ig__shead img { width: 26px; height: 26px; border-radius: 50%; }
+.ig__shead small { color: #c8c3c6; font-weight: 400; }
+.ig__shead button { margin-left: auto; display: grid; place-items: center; width: 30px; height: 30px; }
+.ig__shead svg { width: 16px; height: 16px; }
+.ig__simg { align-self: center; justify-self: center; width: 72%; border-radius: 50%; box-shadow: 0 0 60px rgba(224, 20, 36, .45); }
+.ig__story .ig__go { cursor: pointer; }
+
+/* --- Ao vivo --- */
+.insta.is-live { --g: 0; height: 320vh; padding: 0; }
+.insta.is-live .insta__pin { position: sticky; top: 0; display: block; width: auto; height: 100vh; height: 100svh; overflow: hidden; }
+.insta.is-live .insta__copy {
+  position: absolute; z-index: 2; top: clamp(96px, 15vh, 150px); left: 50%; width: min(760px, calc(100% - 44px));
+  opacity: clamp(0, calc(1 - var(--g) * 2.4), 1); transform: translate(-50%, calc(var(--g) * -60px));
+}
+.insta.is-live .insta__phone {
+  position: absolute; z-index: 1; top: 50%; left: 50%; width: 300px;
+  transform: translate(-50%, calc(-50% + (1 - var(--g)) * 30vh + var(--g) * 3vh)) scale(calc(var(--s0, .6) + (var(--s1, 1) - var(--s0, .6)) * var(--g)));
+}
+.insta.is-live .msplash {
+  position: absolute; inset: 0; z-index: 3; display: grid; place-content: center; justify-items: center; gap: 10px; border-radius: 33px;
+  background: radial-gradient(60% 40% at 50% 42%, rgba(224, 20, 36, .22), transparent 70%), #0b0f13;
+  opacity: clamp(0, calc(1 - (var(--g) - .18) * 3.4), 1); pointer-events: none;
+}
+.msplash img { width: 76px; height: 76px; border-radius: 50%; box-shadow: 0 0 0 3px #0b0f13, 0 0 0 5px var(--red); }
+.msplash b { margin-top: 8px; font: 700 .95rem/1.2 var(--disp); color: #f4f1ee; }
+.msplash small { color: #a7a1a6; font-size: .72rem; }
+.insta.is-live .insta__cta {
+  --o: clamp(0, calc((var(--g) - .8) * 6), 1);
+  position: absolute; z-index: 4; left: 50%; bottom: clamp(20px, 4vh, 36px);
+  opacity: var(--o); transform: translate(-50%, calc((1 - var(--o)) * 16px));
+}
+.insta.is-live:not(.is-end) .insta__cta { pointer-events: none; }
+@media (max-width: 759px) {
+  .insta.is-live .insta__sub { display: none; } /* no celular o título sozinho deixa espaço para o aparelho */
+  .insta.is-live .insta__phone { width: 280px; }
+}
+
+/* Enquanto o celular cresce, a roda do mouse rola a página; quando ele assenta, rola o perfil
+   (e, no fim do perfil, volta a rolar a página sozinha) */
+.insta.is-live:not(.is-end) .ig__screen { overflow: hidden; }
+.insta__hint { display: none; }
+@media (min-width: 1000px) {
+  .insta.is-live .insta__hint {
+    display: block; position: absolute; z-index: 2; top: 50%; left: clamp(24px, 6vw, 110px); max-width: 230px; margin: 0;
+    color: var(--soft); font-size: .9rem; line-height: 1.5; text-align: left;
+    opacity: clamp(0, calc((var(--g) - .8) * 6), 1); transform: translateY(-50%);
+  }
 }

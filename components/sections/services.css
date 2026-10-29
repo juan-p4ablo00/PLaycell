@@ -1,0 +1,87 @@
+/* =========================================================
+   SERVIÇOS — grade de cards (bento), no desenho dos cards do NoteCell.
+   Cada card é um link que abre a conversa certa no WhatsApp.
+   ========================================================= */
+.svc { --card-bg: #0b0b0c; --card-line: rgba(255, 255, 255, .08); --card-ink-2: #a19a98; }
+.svc__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: clamp(20px, 2.4vw, 30px); }
+.svc__head h2 { margin-top: 16px; font-size: clamp(1.9rem, 4.4vw, 3rem); }
+.svc__note { max-width: 28em; color: var(--dim); font-size: .85rem; line-height: 1.45; text-align: right; }
+
+.bento { display: grid; grid-template-columns: 1.05fr 1.05fr .9fr; grid-template-rows: minmax(230px, 1fr) minmax(230px, 1fr); gap: 14px; height: min(640px, max(520px, 50vw)); }
+.card--big, .card--tall { grid-row: span 2; }
+
+.card {
+  position: relative; display: block; overflow: hidden; isolation: isolate; border-radius: 24px; text-decoration: none; color: var(--bone);
+  background: var(--card-bg); box-shadow: inset 0 0 0 1px var(--card-line), inset 0 1px 0 rgba(255, 255, 255, .05);
+  transition: box-shadow .5s var(--ease), transform .3s var(--ease);
+}
+.card:active { transform: scale(.99); }
+/* Luz que segue o cursor (--mx/--my vêm do motion.js) e borda que acende em vermelho perto dele */
+.card::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .5s;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .075), transparent 60%);
+}
+.card::after {
+  content: ""; position: absolute; inset: 0; z-index: 5; pointer-events: none; border-radius: inherit; padding: 1px; opacity: 0; transition: opacity .5s;
+  background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 90, 80, .75), transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+@media (hover: hover) { .card:hover::before, .card:hover::after { opacity: 1; } }
+.card:focus-visible { outline: 2px solid var(--bone); outline-offset: 3px; }
+
+.card__head { position: relative; z-index: 4; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 22px 0 24px; }
+.card__t { font: 600 clamp(1.05rem, 1.35vw, 1.25rem)/1.2 var(--disp); letter-spacing: -.02em; }
+.card__s { position: relative; z-index: 4; display: block; max-width: 22em; padding: 8px 24px 0; color: var(--card-ink-2); font-size: .88rem; line-height: 1.4; }
+.go { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #fff; color: #000; transition: transform .6s var(--ease); }
+.go svg { width: 16px; height: 16px; transition: transform .6s var(--ease); }
+@media (hover: hover) { .card:hover .go svg { transform: rotate(-45deg); } }
+.card:focus-visible .go svg { transform: rotate(-45deg); }
+
+/* Card vermelho (o principal) */
+.card--red {
+  background: radial-gradient(120% 90% at 30% 0%, #ff3b32 0%, #d3141c 38%, #7e0a10 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), inset 0 1px 0 rgba(255, 255, 255, .25), 0 40px 90px -50px rgba(255, 30, 24, .8);
+}
+.card--red .card__s { color: rgba(255, 236, 232, .86); }
+.card--red::before { background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .16), transparent 60%); }
+
+/* Mídia dos cards altos: o vídeo real do produto, dissolvendo na cor do card */
+.card__media { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; height: 74%; pointer-events: none; }
+.card__media video, .card__media img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 58%; }
+.card__media {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 26%);
+  mask-image: linear-gradient(to bottom, transparent, #000 26%);
+}
+
+/* Arte dos cards pequenos (canto inferior direito) */
+.card__art { position: absolute; z-index: 2; right: 0; bottom: 0; width: 70%; height: 72%; pointer-events: none; }
+.card__art svg { width: 100%; height: 100%; overflow: visible; }
+/* Carregadores: a bateria enche, segura cheia e recomeça */
+.bt-lv { transform-box: fill-box; transform-origin: left center; animation: charge 3.6s var(--ease) infinite; }
+@keyframes charge { 0% { transform: scaleX(.12); } 55%, 85% { transform: scaleX(1); } 100% { transform: scaleX(.12); } }
+/* Manutenção: a linha vermelha varre a foto e revela o raio-X, sem parar */
+.card--xray .card__s { max-width: 52%; } /* o texto não passa por baixo da foto */
+.card__xray { position: absolute; z-index: 2; right: 20px; bottom: 20px; width: 46%; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 16px; box-shadow: inset 0 0 0 1px var(--card-line), 0 20px 40px -20px #000; }
+.card__xray img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 30% 45%; }
+.card__xray img:first-child { filter: grayscale(.9) brightness(.85); }
+.card__xray img + img { clip-path: inset(0 50% 0 0); animation: xray 4.2s cubic-bezier(.65, 0, .35, 1) infinite alternate; }
+.card__xray i { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: #ff3d4b; box-shadow: 0 0 14px 3px rgba(255, 61, 75, .7); animation: scan 4.2s cubic-bezier(.65, 0, .35, 1) infinite alternate; }
+@keyframes xray { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes scan { from { left: 0; } to { left: calc(100% - 2px); } }
+
+@media (max-width: 980px) {
+  .bento { grid-template-columns: 1fr 1fr; grid-template-rows: auto; height: auto; }
+  .card--big, .card--tall { grid-row: auto; height: clamp(380px, 62vw, 520px); }
+  .card--sm { height: 240px; }
+}
+@media (max-width: 700px) {
+  .svc__head { flex-direction: column; align-items: flex-start; }
+  .svc__note { text-align: left; }
+}
+@media (max-width: 620px) {
+  .bento { grid-template-columns: 1fr; }
+  .card--big { height: clamp(420px, 118vw, 560px); }
+  .card--tall { height: clamp(360px, 96vw, 480px); }
+  .card--sm { height: 220px; }
+}

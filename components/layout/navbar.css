@@ -1,100 +1,61 @@
 /* =========================================================
-   NAVBAR — logo + hamburger em todas as larguras.
-   O menu ocupa a tela inteira e abre como uma cortina (clip-path).
+   NAVBAR — pílula flutuante de vidro translúcido; não cobre a tela.
+   Computador: links à mostra + WhatsApp. Celular: menu suspenso compacto logo abaixo da pílula.
    ========================================================= */
-/* Trava do scroll. A largura da barra (--sbw, medida no JS) é devolvida como padding
+/* Trava do scroll (janela dos apps). A largura da barra (--sbw, medida no JS) volta como padding
    para nada "pular". Não usar scrollbar-gutter: ele muda o valor de vw e altera o hero. */
-html.menu-open { overflow: hidden; padding-right: var(--sbw, 0px); }
-html.menu-open .nav, html.menu-open .menu { padding-right: var(--sbw, 0px); }
-html.menu-open .float-wa { margin-right: var(--sbw, 0px); }
+html.is-locked { overflow: hidden; padding-right: var(--sbw, 0px); }
+html.is-locked .nav, html.is-locked .float-wa { margin-right: var(--sbw, 0px); }
 
-.nav { position: fixed; inset: 0 0 auto; z-index: 60; }
-/* O fundo desfocado fica num pseudo-elemento: backdrop-filter no próprio .nav
-   viraria o containing block do menu fixo e o prenderia nos 72px do header. */
-.nav::before {
-  content: ""; position: absolute; inset: 0;
-  background: rgba(8, 7, 10, .82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line);
-  opacity: 0; transition: opacity .4s var(--ease);
+.nav { position: fixed; z-index: 60; top: 12px; left: 50%; width: min(1180px, 100% - 24px); transform: translateX(-50%); }
+.nav__bar {
+  position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  height: 60px; padding: 0 8px 0 18px; border-radius: 99px;
+  background: rgba(14, 12, 16, .42); border: 1px solid rgba(255, 255, 255, .1);
+  -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 18px 40px -24px rgba(0, 0, 0, .7), inset 0 1px 0 rgba(255, 255, 255, .06);
+  transition: background .4s var(--ease), border-color .4s var(--ease);
 }
-.nav.is-scrolled::before { opacity: 1; }
-.nav.is-open::before { opacity: 0; }
-
-.nav__bar { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; height: 72px; }
-.brand { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; }
+.nav.is-scrolled .nav__bar { background: rgba(14, 12, 16, .62); }
+.brand { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; color: var(--bone); }
 .brand__mark { color: var(--red); }
-.brand__name { font: 800 1.12rem/1 var(--disp); letter-spacing: -.035em; }
-.brand__name b { font-weight: 600; color: var(--dim); }
+.brand__name { font: 800 1.08rem/1 var(--disp); letter-spacing: -.035em; }
+.brand__name b { font-weight: 600; color: #9a9299; }
 
-/* --- Botão --- */
-.nav__toggle {
-  display: inline-flex; align-items: center; gap: 14px;
-  min-height: 46px; margin-right: -10px; padding: 0 10px;
-  background: none; border: 0; color: var(--bone); cursor: pointer;
-  font: 500 .72rem/1 var(--sans); letter-spacing: .2em; text-transform: uppercase;
+/* Links */
+.nav__menu { display: flex; align-items: center; gap: 4px; }
+.nav__menu a {
+  position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 99px;
+  color: rgba(244, 241, 238, .78); font: 500 .88rem/1 var(--sans); text-decoration: none; transition: background .3s, color .3s;
 }
-html:not(.js) .nav__toggle { display: none; } /* sem JS não há menu: a página continua navegável pelo scroll */
-.nav__label { display: none; }
-.nav__burger { display: grid; gap: 7px; width: 24px; }
-.nav__burger i { display: block; height: 1.5px; background: currentColor; transition: transform .45s var(--ease); }
-.nav__burger i:last-child { transform: scaleX(.62); transform-origin: right center; } /* transform, não width: sem recalcular layout */
-.nav__toggle:hover .nav__burger i:last-child { transform: scaleX(1); }
-.nav__toggle[aria-expanded="true"] .nav__burger i:first-child { transform: translateY(4.25px) rotate(45deg); }
-.nav__toggle[aria-expanded="true"] .nav__burger i:last-child { transform: translateY(-4.25px) rotate(-45deg); }
+.nav__menu a:hover { background: rgba(255, 255, 255, .07); color: #f4f1ee; }
+.nav__menu a[aria-current="location"] { color: #f4f1ee; }
+.nav__menu a[aria-current="location"]::after { content: ""; position: absolute; left: 50%; bottom: 7px; width: 4px; height: 4px; border-radius: 50%; background: var(--red-text); transform: translateX(-50%); }
+.nav__menu .nav__wa { margin-left: 8px; padding: 0 18px; background: var(--wa); color: #fff; }
+.nav__menu .nav__wa:hover { background: var(--wa-hover); color: #fff; }
 
-/* --- Menu: painel lateral que ocupa metade da tela; o resto da página fica escurecido --- */
-.menu__scrim {
-  position: fixed; inset: 0; z-index: 0; background: rgba(8, 7, 10, .62);
-  opacity: 0; visibility: hidden; transition: opacity .4s var(--ease), visibility 0s .4s;
-}
-.nav.is-open .menu__scrim { opacity: 1; visibility: visible; transition: opacity .5s var(--ease); }
+/* Botão do celular */
+.nav__toggle { display: none; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .06); color: #f4f1ee; cursor: pointer; }
+.nav__burger { display: grid; gap: 6px; width: 20px; }
+.nav__burger i { display: block; height: 1.5px; background: currentColor; transition: transform .4s var(--ease); }
+.nav__toggle[aria-expanded="true"] .nav__burger i:first-child { transform: translateY(3.75px) rotate(45deg); }
+.nav__toggle[aria-expanded="true"] .nav__burger i:last-child { transform: translateY(-3.75px) rotate(-45deg); }
 
-.menu {
-  position: fixed; inset: 0 0 0 auto; z-index: 1; width: min(88vw, 520px); overflow-y: auto; overscroll-behavior: contain;
-  background: radial-gradient(90% 50% at 0% 100%, rgba(224, 20, 36, .2), transparent 70%), var(--ink);
-  border-left: 1px solid var(--line);
-  clip-path: inset(0 0 0 100%); visibility: hidden;
-  transition: clip-path .5s var(--ease), visibility 0s .5s;
-}
-.nav.is-open .menu { clip-path: inset(0); visibility: visible; transition: clip-path .7s var(--ease); }
-
-.menu__grid {
-  min-height: 100%; display: grid; align-content: space-between; gap: 40px;
-  padding: 104px clamp(24px, 4vw, 56px) 32px;
-}
-
-.menu__links li { overflow: hidden; } /* máscara: cada linha "sobe" de dentro dela mesma */
-.menu__links a {
-  display: flex; align-items: baseline; gap: clamp(14px, 2vw, 26px);
-  padding-block: .04em .1em; text-decoration: none;
-  font: 800 clamp(2rem, 9vw, 2.6rem)/1.06 var(--disp); letter-spacing: -.04em;
-  transform: translateY(110%); transition: transform .45s var(--ease), color .3s;
-}
-.nav.is-open .menu__links a { transform: none; transition: transform .8s var(--ease) calc(.14s + var(--i) * .06s), color .3s; }
-.menu__links span { font: 600 .74rem/1 var(--disp); font-variant-numeric: tabular-nums; letter-spacing: .16em; color: var(--red-text); transform: translateY(-.15em); }
-/* Ao apontar para um item, os outros recuam */
-.menu__links:hover a, .menu__links:has(a:focus-visible) a { color: rgba(244, 241, 238, .32); }
-.menu__links a:hover, .menu__links a:focus-visible { color: var(--bone); }
-/* Seção em que a pessoa está */
-.menu__links a[aria-current="location"]::after { content: ""; width: 8px; height: 8px; align-self: center; border-radius: 50%; background: var(--red-text); }
-
-.menu__aside {
-  display: grid; gap: 30px; align-content: end;
-  opacity: 0; transform: translateY(14px); transition: opacity .3s, transform .3s var(--ease);
-}
-.nav.is-open .menu__aside { opacity: 1; transform: none; transition: opacity .6s .42s, transform .8s var(--ease) .42s; }
-.menu__aside .btn { justify-self: start; }
-.menu__meta { display: grid; gap: 18px; }
-.menu__meta dt { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); }
-.menu__meta dd { margin: 5px 0 0; line-height: 1.5; }
-.menu__meta a { text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .35s var(--ease); }
-.menu__meta a:hover { background-size: 100% 1px; }
-
-@media (min-width: 760px) {
-  .menu { width: max(50vw, 440px); }
-  .menu__links a { font-size: clamp(2.4rem, 3.4vw, 3.6rem); }
-  .menu__grid { padding-bottom: 48px; }
-}
-@media (min-width: 900px) {
-  .nav__label { display: inline; }
+@media (max-width: 899px) {
+  .nav__bar { height: 56px; padding: 0 6px 0 14px; }
+  .js .nav__toggle { display: grid; }
+  /* Menu suspenso: um cartão de vidro logo abaixo da pílula, do tamanho do conteúdo */
+  .js .nav__menu {
+    position: absolute; top: calc(100% + 8px); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 2px; padding: 8px;
+    border-radius: 24px; background: rgba(14, 12, 16, .86); border: 1px solid rgba(255, 255, 255, .1);
+    -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%);
+    box-shadow: 0 24px 50px -24px rgba(0, 0, 0, .8);
+    opacity: 0; visibility: hidden; transform: translateY(-8px) scale(.98); transform-origin: top center;
+    transition: opacity .25s var(--ease), transform .35s var(--ease), visibility 0s .35s;
+  }
+  .js .nav.is-open .nav__menu { opacity: 1; visibility: visible; transform: none; transition: opacity .3s var(--ease), transform .45s var(--ease); }
+  .nav__menu a { min-height: 48px; padding: 0 16px; border-radius: 16px; font-size: 1rem; }
+  .nav__menu a[aria-current="location"]::after { left: auto; right: 18px; bottom: auto; transform: none; }
+  .nav__menu .nav__wa { justify-content: center; margin: 6px 0 0; }
+  html:not(.js) .nav__menu { display: none; } /* sem JS não há menu no celular: a página segue navegável pelo scroll */
 }

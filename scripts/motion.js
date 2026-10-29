@@ -1,5 +1,5 @@
-/* Motion compartilhado: títulos que sobem de dentro da linha, luz que segue o cursor (e inclina os objetos dos
-   serviços), números que contam ao aparecer.
+/* Motion compartilhado: títulos que sobem de dentro da linha, luz que segue o cursor (painéis e cards)
+   e números que contam ao aparecer.
    Com prefers-reduced-motion nada disso roda: o HTML já está no estado final. */
 (() => {
   'use strict';
@@ -59,26 +59,16 @@
     requestAnimationFrame(tick);
   }, .6);
 
-  /* Luz que segue o cursor; nos objetos dos serviços, também inclina (só com mouse) */
+  /* Luz que segue o cursor (só com mouse): nos cards a borda acende perto dele */
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    document.querySelectorAll('.room__object, [data-light]').forEach((el) => {
-      const tilt = el.classList.contains('room__object');
+    document.querySelectorAll('.card, [data-light]').forEach((el) => {
       el.addEventListener('pointermove', (e) => {
         const r = el.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
-        el.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`);
-        el.style.setProperty('--my', `${(y * 100).toFixed(1)}%`);
-        if (tilt) {
-          el.style.setProperty('--rx', `${((.5 - y) * 10).toFixed(2)}deg`);
-          el.style.setProperty('--ry', `${((x - .5) * 14).toFixed(2)}deg`);
-        }
+        el.style.setProperty('--mx', `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
+        el.style.setProperty('--my', `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
         el.classList.add('is-lit');
       });
-      el.addEventListener('pointerleave', () => {
-        el.classList.remove('is-lit');
-        el.style.setProperty('--rx', '0deg');
-        el.style.setProperty('--ry', '0deg');
-      });
+      el.addEventListener('pointerleave', () => el.classList.remove('is-lit'));
     });
   }
 })();

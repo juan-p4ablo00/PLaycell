@@ -1,213 +1,259 @@
 /* =========================================================
-   HERO — a desmontagem é controlada pelo progresso do scroll.
-   O JS escreve apenas --p (0 → 1) em #stage; todo o resto é CSS.
-   Parte aprovada e congelada: não depende de nenhuma outra seção.
+   HERO — o celular se desmonta em seis camadas conforme a rolagem (mockup "Motion de Celular para Hero").
+   O JS escreve só --p (0 → 1) e, no arrasto, --yaw/--pitch em #stage; todo o resto é CSS.
    ========================================================= */
-.hero { position: relative; height: 520vh; }
+.hero { position: relative; height: 540vh; }
 /* O hero mantém o verde aprovado do botão; o resto do site usa o token novo (mais contraste). */
 .hero { --wa: #128c4a; --wa-hover: #0e7340; }
 
 .stage {
-  --p: 0;
-  position: sticky; top: 0;
-  height: 100vh; height: 100svh;
-  display: grid; place-items: center;
-  overflow: hidden;
-  perspective: 1500px; perspective-origin: 50% 46%;
-  background: var(--ink);
+  --p: 0; --yaw: 0deg; --pitch: 0deg;
+  position: sticky; top: 0; isolation: isolate; overflow: hidden;
+  height: 100vh; height: 100svh; min-height: 620px;
+  perspective: 1500px;
+  background:
+    radial-gradient(circle at 74% 46%, rgba(120, 12, 10, .16), transparent 32%),
+    linear-gradient(135deg, #090909, #030303 72%);
+}
+.stage__grid {
+  position: absolute; inset: 72px 0 0; z-index: -1; opacity: calc(.7 - var(--p) * .5);
+  background-image: linear-gradient(rgba(255, 255, 255, .024) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .024) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 25%, #000 80%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 25%, #000 80%, transparent);
 }
 .stage__glow {
-  position: absolute; width: min(760px, 120vw); aspect-ratio: 1; border-radius: 50%;
-  background: radial-gradient(circle, rgba(224, 20, 36, .34), rgba(224, 20, 36, .06) 45%, transparent 68%);
-  opacity: calc(.55 + var(--p) * .2);
-  transform: scale(calc(.72 + var(--p) * .3));
+  position: absolute; z-index: -1; top: 48%; left: 69%; width: min(680px, 65vw); aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle, rgba(224, 20, 36, .27), rgba(161, 9, 6, .08) 42%, transparent 70%);
+  filter: blur(8px); opacity: calc(.72 + var(--p) * .26);
+  transform: translate(-50%, -50%) scale(calc(.8 + var(--p) * .32));
 }
 
 /* --- Texto de abertura --- */
 .intro {
-  position: absolute; inset: 0; z-index: 4;
-  display: grid; align-content: center;
-  opacity: clamp(0, calc(1 - var(--p) * 6), 1);
-  transform: translateY(calc(var(--p) * -48px));
+  position: absolute; z-index: 5; top: 50%; left: clamp(24px, 7vw, 116px); width: min(46vw, 680px);
+  opacity: clamp(0, calc(1 - var(--p) * 5.5), 1);
+  transform: translateY(calc(-50% - var(--p) * 48px));
 }
-/* Some do fluxo de foco só depois do primeiro ato (sem JS, continua visível) */
+/* Some do fluxo de foco depois do primeiro ato (sem JS, continua visível) */
 .stage[data-act]:not([data-act="0"]) .intro { visibility: hidden; }
-.intro h1 { margin: 22px 0 0; font-size: clamp(1.95rem, 4.6vw, 4rem); }
-.intro h1 em { font-style: normal; color: var(--red); }
-.intro .lead { margin-top: 20px; max-width: 42ch; color: var(--dim); font-size: clamp(1rem, 1.5vw, 1.12rem); }
-.intro .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
-
-/* --- Dispositivo --- */
-.device {
-  --ox: 0px; --oy: 15vh; --sc: .74; --shift: -6vw;
-  --e: clamp(0, calc(var(--p) * 3.2), 1);       /* entrada: só nos primeiros 31% */
-  position: relative; z-index: 2;
-  width: min(248px, 46vw); aspect-ratio: 9 / 19;
-  transform-style: preserve-3d;
-  transform:
-    translate3d(calc(var(--ox) * (1 - var(--e)) + var(--p) * var(--shift)), calc(var(--oy) * (1 - var(--e)) - var(--p) * 3vh), 0)
-    rotateX(calc(var(--p) * -14deg))
-    rotateY(calc(var(--p) * 30deg))
-    scale(calc((var(--sc) + (1 - var(--sc)) * var(--e)) * (1 - var(--p) * .34)));
-  will-change: transform;
+.intro .eyebrow { display: flex; align-items: center; gap: 12px; margin: 0 0 26px; color: #aaa5a1; font-size: .66rem; letter-spacing: .23em; }
+.intro .eyebrow span { width: 28px; height: 1px; background: var(--red); }
+.intro h1 { margin: 0; font-size: clamp(2.6rem, 4.9vw, 5.2rem); font-weight: 400; line-height: .95; letter-spacing: -.055em; }
+.intro h1 em { font-style: normal; color: var(--red-text); }
+.intro .lead { max-width: 430px; margin-top: 28px; color: #96918d; font-size: clamp(.95rem, 1.3vw, 1.12rem); line-height: 1.55; }
+.intro .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.scroll-callout { display: flex; align-items: center; gap: 14px; margin-top: 40px; color: #6f6b68; font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; }
+.mouse { position: relative; display: block; width: 22px; height: 34px; border: 1px solid rgba(255, 255, 255, .3); border-radius: 99px; }
+.mouse i { position: absolute; top: 8px; left: 50%; width: 2px; height: 6px; border-radius: 2px; background: var(--red); transform: translateX(-50%); animation: scroll-dot 1.8s ease-in-out infinite; }
+@keyframes scroll-dot {
+  0%, 100% { opacity: .3; transform: translate(-50%); }
+  45% { opacity: 1; }
+  75% { opacity: 0; transform: translate(-50%, 9px); }
 }
 
-.layer {
-  --s: 0;     /* onde a peça começa a se separar (0–1) */
-  --z: 0px;   /* deslocamento final em profundidade */
-  --dy: 0px;  /* deslocamento final na vertical */
-  --z0: 0px;  /* offset fixo: evita z-fighting com tudo montado */
-  --lp: clamp(0, calc((var(--p) - var(--s)) / .42), 1);
-  position: absolute; inset: 0; border-radius: 26px;
-  transform-style: preserve-3d; backface-visibility: hidden;
-  transform: translate3d(0, calc(var(--dy) * var(--lp)), calc(var(--z0) + var(--z) * var(--lp)));
-}
-
-.layer--film   { --s: .06; --z: 300px;  --dy: -190px; --z0: 2px; }
-.layer--screen { --s: .20; --z: 170px;  --dy: -108px; --z0: 1px; }
-.layer--board  { --s: .36; --z: 40px;   --dy: -22px;  --z0: 0px; }
-.layer--batt   { --s: .48; --z: -90px;  --dy: 70px;   --z0: -1px; }
-.layer--frame  { --s: .58; --z: -220px; --dy: 160px;  --z0: -2px; }
-.layer--case   { --s: .68; --z: -350px; --dy: 250px;  --z0: -3px; }
-
-/* Índice de peças: 2D, sem oclusão, dirigido pelo mesmo --p */
+/* --- Índice das camadas e trilho de progresso --- */
 .parts {
-  position: absolute; z-index: 5; left: clamp(20px, 4.5vw, 70px); top: 50%; translate: 0 -50%;
-  display: grid; gap: 15px;
-  opacity: clamp(0, calc((var(--p) - .1) * 8), 1);
+  position: absolute; z-index: 8; top: 50%; left: clamp(24px, 4vw, 68px); display: grid; gap: 17px; margin: 0; padding: 0;
+  opacity: clamp(0, calc((var(--p) - .1) * 7), 1); transform: translateY(-50%);
 }
 .parts li {
-  position: relative; padding-left: 20px;
-  font: 500 .67rem/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--bone);
-  opacity: clamp(.26, calc((var(--p) - var(--s)) * 9), 1);
+  display: flex; align-items: center; gap: 12px; color: #8c8784;
+  font: 600 .64rem/1 var(--sans); letter-spacing: .19em; text-transform: uppercase;
+  opacity: clamp(.25, calc((var(--p) - var(--i) * .09) * 5), 1);
 }
-.parts li::before {
-  content: ""; position: absolute; left: 0; top: 50%; width: 11px; height: 1px; background: var(--red);
-  transform: scaleX(clamp(0, calc((var(--p) - var(--s)) * 9), 1)); transform-origin: left center;
+.parts li span { color: var(--red-text); font: 600 .58rem/1 var(--disp); }
+.parts li::after {
+  content: ""; width: clamp(22px, 3vw, 46px); height: 1px; background: linear-gradient(90deg, rgba(224, 20, 36, .8), transparent);
+  transform: scaleX(clamp(0, calc((var(--p) - var(--i) * .08) * 4), 1)); transform-origin: left center;
+}
+.progress {
+  position: absolute; z-index: 8; top: 50%; right: clamp(24px, 3.6vw, 58px); display: grid; justify-items: center; gap: 12px; margin: 0;
+  color: #5f5b59; font: 600 .52rem/1 var(--disp); opacity: clamp(0, calc((var(--p) - .08) * 8), 1); transform: translateY(-50%);
+}
+.progress i { position: relative; width: 1px; height: 190px; overflow: hidden; background: rgba(255, 255, 255, .12); }
+.progress b { position: absolute; inset: 0; background: linear-gradient(var(--red-text), var(--red)); transform: scaleY(var(--p)); transform-origin: top; }
+
+/* --- O aparelho --- */
+.phone {
+  position: absolute; z-index: 4; top: 50%; left: 72%; width: min(285px, 22vw); aspect-ratio: 9 / 19;
+  cursor: grab; touch-action: pan-y;
+  transform: translate(-50%, -50%) translateX(calc(var(--p) * -10vw)) translateY(calc((1 - clamp(0, var(--p) * 4, 1)) * 9vh)) scale(calc(.91 - var(--p) * .16));
+}
+.stage.is-dragging .phone { cursor: grabbing; }
+.phone__device {
+  position: absolute; inset: 0; transform-style: preserve-3d;
+  transform: rotateX(calc(-5deg - var(--p) * 8deg + var(--pitch))) rotateY(calc(-17deg + var(--p) * 31deg + var(--yaw))) rotateZ(calc(2deg - var(--p) * 4deg));
+  transition: transform .9s var(--ease);
+}
+.stage.is-dragging .phone__device { transition-duration: .12s; }
+.phone__shadow {
+  position: absolute; z-index: -1; bottom: -11%; left: 50%; width: 112%; height: 8%; border-radius: 50%;
+  background: #000; filter: blur(22px); opacity: calc(.75 - var(--p) * .4); transform: translateX(-50%);
+}
+.drag-hint {
+  position: absolute; top: calc(100% + 38px); left: 50%; width: max-content; color: #696562;
+  font-size: .58rem; letter-spacing: .21em; text-transform: uppercase; opacity: clamp(0, calc(1 - var(--p) * 7), 1); transform: translateX(-50%);
 }
 
-/* Película: vidro com varredura de luz */
-.layer--film {
-  border: 1px solid rgba(255, 255, 255, .3);
-  border-radius: 27px;
-  background: linear-gradient(118deg, rgba(255, 255, 255, .02) 32%, rgba(255, 255, 255, .17) 46%, rgba(255, 255, 255, .02) 60%);
-  box-shadow: 0 30px 60px -36px #000;
+/* Camadas: cada uma começa a se soltar em --s e viaja até (--dx, --dy, --dz) */
+.layer {
+  --s: 0; --dx: 0px; --dy: 0px; --dz: 0px;
+  --lp: clamp(0, calc((var(--p) - var(--s)) * 3.5), 1);
+  position: absolute; inset: 0; border-radius: 42px; transform-style: preserve-3d; /* verso visível: girando, a carcaça com as câmeras aparece */
+  transform: translate3d(calc(var(--dx) * var(--lp)), calc(var(--dy) * var(--lp)), calc(var(--dz) * var(--lp)));
+  will-change: transform;
 }
-/* Tela */
-.layer--screen {
-  display: grid; place-content: center; justify-items: center; gap: 12px;
-  background: radial-gradient(118% 88% at 50% 16%, #2c0b12, #0a0609 72%);
-  border: 1px solid rgba(255, 255, 255, .13);
-  box-shadow: inset 0 0 70px -24px rgba(224, 20, 36, .7);
+.layer--glass   { --s: .04; --dx: -54px; --dy: -166px; --dz: 320px; }
+.layer--screen  { --s: .16; --dx: -30px; --dy: -93px;  --dz: 180px; }
+.layer--board   { --s: .28; --dx: -10px; --dy: -27px;  --dz: 60px; }
+.layer--battery { --s: .39; --dx: 8px;   --dy: 34px;   --dz: -55px; }
+.layer--frame   { --s: .49; --dx: 28px;  --dy: 89px;   --dz: -155px; }
+.layer--shell   { --s: .59; --dx: 50px;  --dy: 150px;  --dz: -260px; }
+
+/* Carcaça: traseira com o módulo de câmera */
+.layer--shell {
+  border: 1px solid #555256;
+  background: linear-gradient(130deg, rgba(255, 255, 255, .2), transparent 20%), linear-gradient(145deg, #29282b, #0d0d0e 72%);
+  box-shadow: inset 0 0 0 7px #151416, inset 0 0 40px rgba(255, 255, 255, .04), 0 30px 70px rgba(0, 0, 0, .48);
 }
-.layer__logo { color: var(--red); filter: drop-shadow(0 8px 22px rgba(224, 20, 36, .55)); }
-.layer--screen span { font: 600 .72rem/1 var(--disp); letter-spacing: .26em; text-transform: uppercase; color: rgba(244, 241, 238, .76); }
+.shell-logo { position: absolute; top: 50%; left: 50%; color: rgba(255, 255, 255, .16); transform: translate(-50%, -50%); }
+.camera {
+  position: absolute; top: 22px; left: 20px; width: 106px; aspect-ratio: 1; border-radius: 29px;
+  border: 1px solid rgba(255, 255, 255, .1); background: linear-gradient(145deg, #242326, #121113); box-shadow: 0 12px 28px rgba(0, 0, 0, .42);
+}
+.camera i {
+  position: absolute; width: 37px; aspect-ratio: 1; border-radius: 50%; border: 4px solid #454247;
+  background: radial-gradient(circle at 38% 34%, #24435b 0, #24435b 8%, #080a0e 24%, #010102 62%);
+  box-shadow: 0 0 0 1px #050505, inset 0 0 8px rgba(72, 111, 142, .42);
+}
+.camera i:nth-child(1) { top: 10px; left: 12px; }
+.camera i:nth-child(2) { top: 28px; right: 11px; }
+.camera i:nth-child(3) { bottom: 9px; left: 14px; }
+.camera b { position: absolute; bottom: 14px; right: 18px; width: 10px; aspect-ratio: 1; border-radius: 50%; background: #d8d1b6; box-shadow: 0 0 8px rgba(255, 238, 175, .44); }
+/* Estrutura: aro de metal com os botões laterais */
+.layer--frame { border: 10px solid #8b898b; background: rgba(22, 21, 23, .7); box-shadow: inset 0 0 0 2px #171619, 0 0 0 1px #b7b5b6, 0 18px 36px rgba(0, 0, 0, .38); }
+.rail { position: absolute; top: 20%; width: 3px; height: 27%; border-radius: 3px; background: #c8c5c6; }
+.rail--l { left: -12px; }
+.rail--r { right: -12px; top: 27%; height: 15%; }
+/* Bateria */
+.layer--battery { inset: 28px 16px 24px; border-radius: 31px; border: 1px solid #49464b; background: linear-gradient(150deg, #252329, #101014); box-shadow: 0 20px 35px rgba(0, 0, 0, .38); }
+.battery-cap { position: absolute; top: -7px; left: 50%; width: 36%; height: 8px; border-radius: 5px 5px 0 0; background: #6b686d; transform: translateX(-50%); }
+.battery-cell {
+  position: absolute; inset: 12px; display: grid; place-content: center; justify-items: center; border-radius: 23px; color: #aaa4a7;
+  border: 1px solid rgba(255, 255, 255, .08);
+  background: radial-gradient(circle at 50% 30%, rgba(224, 20, 36, .2), transparent 44%), linear-gradient(155deg, #21191b, #0f0d10);
+}
+.battery-icon { position: relative; display: grid; place-items: center; width: 44px; height: 25px; margin-bottom: 14px; border: 1px solid #656166; border-radius: 6px; }
+.battery-icon::after { content: ""; position: absolute; right: -6px; width: 4px; height: 11px; border-radius: 0 2px 2px 0; background: #656166; }
+.battery-icon i { width: 72%; height: 60%; border-radius: 3px; background: var(--red); box-shadow: 0 0 14px rgba(224, 20, 36, .45); }
+.battery-cell small { margin-bottom: 6px; font-size: .5rem; letter-spacing: .2em; text-transform: uppercase; }
+.battery-cell strong { color: #ded9d6; font: 500 .72rem/1 var(--disp); letter-spacing: .12em; }
 /* Placa */
 .layer--board {
-  border: 1px solid rgba(244, 241, 238, .14); border-radius: 24px;
+  inset: 19px 13px 21px; border-radius: 33px; overflow: hidden; border: 1px solid #5a5143; box-shadow: 0 25px 45px rgba(0, 0, 0, .45);
   background:
-    repeating-linear-gradient(90deg, transparent 0 11px, rgba(224, 20, 36, .2) 11px 12px),
-    repeating-linear-gradient(0deg, transparent 0 15px, rgba(244, 241, 238, .07) 15px 16px),
-    linear-gradient(162deg, #1a141a, #0c090d);
+    radial-gradient(circle at 18% 12%, #8f6f36 0, #8f6f36 1px, transparent 2px),
+    repeating-linear-gradient(90deg, transparent 0 17px, rgba(197, 145, 61, .15) 18px 19px),
+    repeating-linear-gradient(0deg, transparent 0 21px, rgba(197, 145, 61, .13) 22px 23px),
+    linear-gradient(145deg, #27352d, #101b16);
 }
-.layer--board i { position: absolute; left: 17%; top: 24%; width: 48%; height: 19%; border-radius: 5px; background: #241d26; box-shadow: inset 0 0 0 1px rgba(244, 241, 238, .18), 0 8px 20px -10px #000; }
-.layer--board i::after { content: ""; position: absolute; left: 12%; top: 118%; width: 60%; height: 70%; border-radius: 4px; background: #1d1720; box-shadow: inset 0 0 0 1px rgba(244, 241, 238, .13); }
-/* Bateria */
-.layer--batt {
-  border: 1px solid rgba(244, 241, 238, .12); border-radius: 24px;
-  background: linear-gradient(172deg, #16121a, #0a080c);
+.chip { position: absolute; display: grid; place-items: center; border-radius: 6px; border: 1px solid #4d4c4d; background: linear-gradient(145deg, #29292b, #101012); box-shadow: 0 7px 14px rgba(0, 0, 0, .45); }
+.chip--main { top: 19%; left: 17%; width: 49%; height: 20%; color: #a6a1a2; font: 500 .95rem/1 var(--disp); letter-spacing: .08em; }
+.chip--small { top: 46%; right: 12%; width: 28%; height: 12%; }
+.chip--long { bottom: 19%; left: 18%; width: 58%; height: 11%; }
+.contacts { position: absolute; top: 11%; right: 9%; width: 8px; height: 42%; background: repeating-linear-gradient(#d2a84f 0 3px, transparent 3px 7px); }
+/* Tela */
+.layer--screen {
+  overflow: hidden; border: 2px solid #4d4b4f;
+  background: radial-gradient(circle at 50% 36%, rgba(224, 20, 36, .36), transparent 30%), linear-gradient(160deg, #1b0b0c, #040405 65%);
+  box-shadow: inset 0 0 0 7px #08080a, inset 0 0 60px rgba(224, 20, 36, .1), 0 35px 65px rgba(0, 0, 0, .48);
 }
-.layer--batt i {
-  position: absolute; inset: 15% 13% 19%; border-radius: 10px;
-  background: linear-gradient(180deg, rgba(224, 20, 36, .8), rgba(122, 10, 20, .45));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16);
+.island { position: absolute; top: 14px; left: 50%; width: 86px; height: 23px; border-radius: 99px; background: #020203; transform: translateX(-50%); }
+.screen-ui { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; }
+.screen-time { position: absolute; top: 19px; left: 27px; color: rgba(255, 255, 255, .74); font-size: .5rem; font-weight: 600; }
+.screen-orbit {
+  position: relative; display: grid; place-items: center; width: 112px; aspect-ratio: 1; margin-bottom: 29px; border-radius: 50%;
+  border: 1px solid rgba(224, 20, 36, .24); box-shadow: 0 0 55px rgba(224, 20, 36, .2); color: var(--red);
 }
-/* Estrutura (chassi) */
-.layer--frame {
-  background: none; border: 7px solid #3a333c; border-radius: 30px;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1), 0 0 0 1px rgba(0, 0, 0, .7);
+.screen-orbit::before, .screen-orbit::after { content: ""; position: absolute; inset: 15px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .1); }
+.screen-orbit::after { inset: 32px; border-color: rgba(224, 20, 36, .38); }
+.screen-orbit svg { position: relative; z-index: 1; filter: drop-shadow(0 0 18px rgba(224, 20, 36, .6)); }
+.screen-orbit i { position: absolute; width: 5px; aspect-ratio: 1; border-radius: 50%; background: var(--red-text); box-shadow: 0 0 10px var(--red); }
+.screen-orbit i:nth-child(1) { top: 9px; left: 22px; }
+.screen-orbit i:nth-child(2) { bottom: 31px; right: 5px; }
+.screen-ui p { margin: 0; color: #efebe8; font: 500 .92rem/1.25 var(--disp); letter-spacing: .22em; text-align: center; }
+.screen-line { width: 35px; height: 1px; margin-top: 17px; background: var(--red); }
+/* Película: vidro com o reflexo correndo conforme a rolagem */
+.layer--glass {
+  overflow: hidden; border: 1px solid rgba(255, 255, 255, .26); box-shadow: 0 24px 50px rgba(0, 0, 0, .3);
+  background: linear-gradient(120deg, rgba(255, 255, 255, .02), rgba(255, 255, 255, .11) 45%, transparent 64%);
+  -webkit-backdrop-filter: blur(.6px); backdrop-filter: blur(.6px);
 }
-/* Capinha */
-.layer--case {
-  inset: -11px; border-radius: 37px;
-  border: 11px solid rgba(244, 241, 238, .88);
-  background: rgba(244, 241, 238, .035);
-}
-
-/* --- 3D (hero-3d.js): o canvas desenha as peças no lugar das camadas em CSS, que ficam invisíveis mas continuam
-   calculando a coreografia. Sem WebGL, .has-3d não entra e tudo acima vale como antes. --- */
-.stage__gl { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; cursor: grab; touch-action: pan-y; }
-.stage__gl.is-grabbing { cursor: grabbing; }
-.stage.has-3d .device { visibility: hidden; }
-/* O texto da abertura cobre o palco inteiro: só os blocos dele recebem o mouse, o resto é do celular */
-.stage.has-3d .intro { pointer-events: none; }
-.stage.has-3d .intro .wrap > * { pointer-events: auto; }
+.glass-sheen { position: absolute; inset: -20%; background: linear-gradient(105deg, transparent 36%, rgba(255, 255, 255, .22) 48%, transparent 60%); transform: translateX(calc(-90% + var(--p) * 170%)); }
 
 /* --- Legenda narrativa --- */
-.stage__caption {
-  position: absolute; left: 0; right: 0; bottom: clamp(22px, 3.4vh, 40px); z-index: 5;
-  height: 3.4em; padding-inline: 22px; text-align: center;
-  opacity: clamp(0, calc((var(--p) - .09) * 9), 1);
+.stage__caption { position: absolute; z-index: 9; bottom: 32px; left: 50%; width: min(600px, 70vw); height: 30px; transform: translateX(-50%); }
+.stage__caption p {
+  position: absolute; inset: 0; display: grid; place-items: center; margin: 0; text-align: center;
+  color: #817c78; font-size: .8rem; letter-spacing: .04em;
+  opacity: 0; transform: translateY(8px); transition: opacity .45s ease, transform .55s var(--ease);
 }
-.stage__caption b {
-  position: absolute; inset: 0; display: grid; place-content: center;
-  font: 400 clamp(.9rem, 1.6vw, 1.05rem)/1.55 var(--sans); color: var(--dim);
-  opacity: 0; transition: opacity .55s var(--ease);
-}
-.stage__caption b.is-on { opacity: 1; }
+.stage__caption p.is-on { opacity: clamp(0, calc(var(--p) * 9), 1); transform: none; }
 
-.scroll-hint {
-  position: absolute; left: 0; right: 0; bottom: 26px; z-index: 5;
-  display: grid; justify-items: center; gap: 10px;
-  font-size: .68rem; letter-spacing: .22em; text-transform: uppercase; color: var(--dim);
-  opacity: clamp(0, calc(1 - var(--p) * 10), 1);
-}
-.scroll-hint i { width: 1px; height: 34px; background: linear-gradient(var(--dim), transparent); }
-
-@media (min-width: 900px) {
-  .hero { height: 560vh; }
-  .device { --ox: 27vw; --oy: 0px; --sc: .9; width: min(272px, 20vw); }
-  /* Coluna de texto à esquerda, celular à direita: nenhum dos dois invade o outro */
-  .intro .wrap { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); }
-  .intro .wrap > * { grid-column: 1; }
-}
-
-/* Telas estreitas: rótulos mais curtos e dispositivo deslocado para a esquerda */
-@media (max-width: 759px) {
-  .hero { height: 460vh; }
-  /* O celular "nasce" de baixo: o texto fica livre na parte de cima */
-  .intro { align-content: start; padding-top: clamp(92px, 14vh, 140px); }
-  .intro .lead { margin-top: 16px; }
-  .intro .actions { margin-top: 26px; }
-  .device { --oy: 44vh; --sc: .58; --shift: -7vw; }
-  /* A dica de scroll cai sobre o celular: vira uma pílula legível, sem a linha */
-  .scroll-hint { bottom: 18px; }
-  .scroll-hint i { display: none; }
-  .scroll-hint span { padding: 8px 13px; border-radius: 999px; background: rgba(8, 7, 10, .72); backdrop-filter: blur(5px); }
-  /* No mobile o índice vira uma linha no topo: o dispositivo fica com a largura toda */
-  .parts {
-    top: clamp(88px, 13vh, 118px); left: 0; right: 0; translate: 0 0;
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 14px; padding-inline: 18px;
+/* --- Telas estreitas: texto em cima, aparelho embaixo --- */
+@media (max-width: 860px) {
+  .hero { height: 480vh; }
+  .stage { min-height: 560px; }
+  .intro { top: clamp(84px, 12vh, 110px); left: 22px; width: calc(100% - 44px); transform: translateY(calc(var(--p) * -36px)); }
+  .intro .eyebrow { margin-bottom: 16px; font-size: .58rem; letter-spacing: .15em; } /* o endereço cabe numa linha */
+  .intro h1 { font-size: clamp(2.1rem, 9.4vw, 3.3rem); }
+  .intro .lead { max-width: 340px; margin-top: 16px; font-size: .95rem; }
+  .intro .actions { margin-top: 20px; }
+  .scroll-callout { display: none; }
+  .phone {
+    top: 76%; left: 52%; width: min(200px, 46vw);
+    transform: translate(-50%, -50%) translateX(calc(var(--p) * -4vw)) translateY(calc((1 - clamp(0, var(--p) * 4, 1)) * 14vh - var(--p) * 18vh)) scale(calc(.82 - var(--p) * .12));
   }
-  .parts li { font-size: .6rem; letter-spacing: .14em; padding-left: 14px; }
-  .parts li::before { width: 8px; }
-  .stage__caption { height: 4.4em; }
+  .parts { top: 84px; left: 18px; right: 18px; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 15px; transform: none; }
+  .parts li { gap: 6px; font-size: .52rem; letter-spacing: .12em; }
+  .parts li::after { display: none; }
+  .progress { right: 15px; }
+  .progress i { height: 140px; }
+  .stage__caption { bottom: 20px; width: calc(100% - 40px); }
+  .stage__caption p { font-size: .68rem; }
+  .layer { --dx: calc(var(--bx) * .55); --dy: calc(var(--by) * .67); --dz: calc(var(--bz) * .63); }
+  .layer--glass   { --bx: -54px; --by: -166px; --bz: 320px; }
+  .layer--screen  { --bx: -30px; --by: -93px;  --bz: 180px; }
+  .layer--board   { --bx: -10px; --by: -27px;  --bz: 60px; }
+  .layer--battery { --bx: 8px;   --by: 34px;   --bz: -55px; }
+  .layer--frame   { --bx: 28px;  --by: 89px;   --bz: -155px; }
+  .layer--shell   { --bx: 50px;  --by: 150px;  --bz: -260px; }
+  .camera { width: 76px; top: 16px; left: 14px; border-radius: 22px; }
+  .camera i { width: 26px; border-width: 3px; }
+  .camera i:nth-child(1) { top: 7px; left: 8px; }
+  .camera i:nth-child(2) { top: 20px; right: 7px; }
+  .camera i:nth-child(3) { bottom: 6px; left: 10px; }
+  .camera b { width: 7px; bottom: 10px; right: 13px; }
+  .screen-orbit { width: 84px; margin-bottom: 20px; }
 }
 @media (max-width: 390px) {
   .intro .actions .btn { width: 100%; }
-  .device { width: 46vw; }
+}
+@media (max-height: 700px) and (min-width: 861px) {
+  .stage { min-height: 520px; }
+  .phone { width: min(235px, 20vw); }
+  .intro h1 { font-size: clamp(2.4rem, 4.2vw, 4.2rem); }
+  .scroll-callout { margin-top: 24px; }
 }
 
-/* Sem motion, a abertura vira uma composição estática já "desmontada". */
+/* Sem motion: a composição fica parada, já entreaberta, e o arrasto continua girando o aparelho */
 @media (prefers-reduced-motion: reduce) {
   .hero { height: auto; }
-  .stage { --p: 1 !important; position: static; display: block; height: auto; padding: 150px 0 300px; overflow: visible; }
-  .stage__glow { top: 10%; left: 50%; translate: -50% 0; }
-  .intro { position: static; visibility: visible; opacity: 1; transform: none; }
-  .device { margin: 150px auto 0; --ox: 0px; --oy: 0px; --sc: 1; --shift: 0px; }
-  .parts {
-    position: static; translate: 0 0; display: flex; flex-wrap: wrap; justify-content: center;
-    gap: 10px 20px; margin: 64px auto 0; max-width: 680px;
-  }
-  .stage__caption, .scroll-hint { display: none; }
+  .stage { --p: .72 !important; position: relative; min-height: 900px; }
+  .intro { visibility: visible; opacity: 1; } /* o título nunca some */
+  .parts { display: none; }
+  .phone__device { transition: none; }
+  .stage__caption p:first-child { opacity: 1; transform: none; }
+  .stage__caption p:not(:first-child) { display: none; }
 }
